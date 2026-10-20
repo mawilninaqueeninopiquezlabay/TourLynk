@@ -29,14 +29,14 @@
   </script>
   
   <style>
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
     @keyframes appSlideIn {
-      0% { opacity: 0; transform: translateY(16px) scale(0.97); }
+      0% { opacity: 0; transform: translateY(16px) scale(0.98); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
     @keyframes modalBounce {
@@ -55,10 +55,12 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 min-h-screen text-slate-800 font-sans flex items-center justify-center p-0 md:p-6 select-none">
+<body id="appBody" class="bg-slate-950 min-h-screen text-slate-800 font-sans flex items-center justify-center p-0 md:p-6 select-none transition-all duration-300">
 
-  <!-- MOBILE VIEWPORT SHELL -->
-  <div class="w-full max-w-md bg-slate-100 min-h-screen md:min-h-[850px] md:max-h-[850px] md:rounded-[48px] md:border-[10px] md:border-slate-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] relative flex flex-col overflow-hidden">
+  <!-- ========================================== -->
+  <!-- 1. MOBILE VIEWPORT SHELL (Visitor, Staff, Auth) -->
+  <!-- ========================================== -->
+  <div id="mobileAppShell" class="w-full max-w-md bg-slate-100 min-h-screen md:min-h-[850px] md:max-h-[850px] md:rounded-[48px] md:border-[10px] md:border-slate-800 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] relative flex flex-col overflow-hidden transition-all duration-300">
     
     <!-- Status Bar Shell -->
     <div class="bg-brand-900 text-white text-[11px] px-7 pt-3.5 pb-1 flex justify-between items-center z-40 select-none">
@@ -77,7 +79,7 @@
       <button onclick="playClickSound(); dismissToast();" class="opacity-70 hover:opacity-100 shrink-0"><i class="fa-solid fa-xmark text-sm"></i></button>
     </div>
 
-    <!-- 1. AUTHENTICATION MODULE -->
+    <!-- AUTHENTICATION MODULE -->
     <section id="authModule" class="flex-1 flex flex-col justify-between p-6 overflow-y-auto z-30 bg-gradient-to-b from-slate-50 via-teal-50/30 to-slate-100">
       
       <div class="text-center pt-3 pb-1">
@@ -141,15 +143,15 @@
         <form id="registerForm" class="hidden space-y-2 animate-app-slide" onsubmit="handleRegisterSubmit(event)">
           <div class="border-b border-slate-200/80 pb-1.5">
             <h2 class="text-base font-extrabold text-slate-900">Create IAS Account</h2>
-            <p class="text-[10px] text-slate-500 font-medium">Supabase Sync & Alphanumeric Password Rules</p>
+            <p class="text-[10px] text-slate-500 font-medium">Supabase Sync & Password Rules</p>
           </div>
 
           <div>
             <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Account Role</label>
             <select id="regRole" required class="w-full px-3 py-1.5 bg-white/90 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 shadow-sm">
-              <option value="visitor">Visitor / Tourist</option>
-              <option value="organizer">Tourism Staff / Event Organizer</option>
-              <option value="admin">Administrator</option>
+              <option value="visitor">Visitor / Tourist (Mobile)</option>
+              <option value="organizer">Tourism Staff / Event Organizer (Mobile)</option>
+              <option value="admin">Administrator (Desktop Web Dashboard)</option>
             </select>
           </div>
           
@@ -208,7 +210,7 @@
 
       </div>
 
-      <!-- Demo Login Buttons -->
+      <!-- Quick Demo Login -->
       <div class="bg-white/90 backdrop-blur-md rounded-2xl p-3 border border-slate-200/90 shadow-md space-y-1.5">
         <div class="font-bold text-slate-700 flex items-center justify-between">
           <span class="flex items-center gap-1.5 text-xs"><i class="fa-solid fa-bolt text-amber-500"></i> Quick Demo Login</span>
@@ -216,7 +218,7 @@
         </div>
         <div class="grid grid-cols-3 gap-1.5 pt-0.5">
           <button type="button" onclick="playClickSound(); quickLogin('admin', 'Admin@123');" class="bg-gradient-to-r from-red-50 to-rose-50 text-red-700 font-bold py-2 px-2 rounded-xl border border-red-200 text-[10px] active:scale-95 flex items-center justify-center gap-1 shadow-sm">
-            <i class="fa-solid fa-user-shield"></i> Admin
+            <i class="fa-solid fa-user-shield"></i> Web Admin
           </button>
           <button type="button" onclick="playClickSound(); quickLogin('organizer', 'Org@1234');" class="bg-gradient-to-r from-amber-50 to-yellow-50 text-amber-800 font-bold py-2 px-2 rounded-xl border border-amber-200 text-[10px] active:scale-95 flex items-center justify-center gap-1 shadow-sm">
             <i class="fa-solid fa-clipboard-user"></i> Staff
@@ -228,7 +230,7 @@
       </div>
     </section>
 
-    <!-- 2. MAIN DASHBOARD SHELL -->
+    <!-- MOBILE MAIN DASHBOARD MODULE (For Tourist & Staff) -->
     <div id="mainAppModule" class="hidden flex-1 flex flex-col justify-between overflow-hidden bg-slate-100 relative">
       
       <header class="glass-header text-white px-5 py-3.5 shadow-lg flex justify-between items-center z-20 shrink-0">
@@ -249,7 +251,7 @@
 
       <main class="flex-1 overflow-y-auto p-4 space-y-4 relative no-scrollbar">
         
-        <!-- TAB 1: EVENTS FEED -->
+        <!-- MOBILE TAB 1: EVENTS FEED -->
         <section id="tabEvents" class="space-y-4 animate-app-slide">
           <div class="bg-gradient-to-br from-brand-900 via-brand-800 to-teal-700 rounded-3xl p-4.5 text-white shadow-xl relative overflow-hidden border border-brand-700/50">
             <div class="relative z-10 flex items-center gap-3.5">
@@ -274,13 +276,13 @@
           <div id="eventsContainer" class="space-y-3"></div>
         </section>
 
-        <!-- TAB 2: MY PASSES (VISITOR ONLY) -->
+        <!-- MOBILE TAB 2: MY PASSES (VISITOR ONLY) -->
         <section id="tabBookings" class="hidden space-y-3 animate-app-slide">
           <h3 class="text-xs font-extrabold text-slate-800">My Tourist Ticket Passes</h3>
           <div id="userBookingsList" class="space-y-3"></div>
         </section>
 
-        <!-- TAB 3: ORGANIZER CONSOLE -->
+        <!-- MOBILE TAB 3: ORGANIZER STAFF CONSOLE -->
         <section id="tabOrganizerReview" class="hidden space-y-4 animate-app-slide">
           <div class="bg-white rounded-3xl p-4 border border-slate-200/90 shadow-sm space-y-2">
             <div class="flex justify-between items-center">
@@ -304,44 +306,7 @@
           </div>
         </section>
 
-        <!-- TAB 4: ADMIN CONSOLE -->
-        <section id="tabAdminApproval" class="hidden space-y-4 animate-app-slide">
-          <div class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex justify-between items-center">
-            <div>
-              <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                <i class="fa-solid fa-map-location-dot text-brand-600"></i> Admin Tourism Console
-              </h3>
-              <p class="text-[10px] text-slate-500 font-medium">Add new spots directly or review proposed place submissions.</p>
-            </div>
-            <button onclick="playClickSound(); openProposeModal();" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-3 py-1.5 rounded-2xl text-[10px] transition active:scale-95 shadow-sm">
-              + Add Spot / Key
-            </button>
-          </div>
-
-          <div class="space-y-2 pt-2">
-            <h4 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-map-pin text-brand-600"></i> Proposed Places Pending Admin Approval
-            </h4>
-            <div id="adminProposedEventsContainer" class="space-y-3 text-[11px]"></div>
-          </div>
-        </section>
-
-        <!-- TAB 5: AUDIT LOG TRAIL -->
-        <section id="tabLogs" class="hidden space-y-3 animate-app-slide">
-          <div class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-sm flex justify-between items-center">
-            <div>
-              <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-cat text-brand-600"></i> System Audit Log Trail
-              </h3>
-              <p class="text-[10px] text-slate-500 font-medium">Cross-Role Security Logs (Synced to Supabase)</p>
-            </div>
-            <button onclick="playClickSound(); fetchAuditLogs();" class="bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold px-3 py-1 rounded-xl text-[10px] transition active:scale-95">Refresh</button>
-          </div>
-
-          <div id="auditLogsContainer" class="space-y-2.5 text-[11px]"></div>
-        </section>
-
-        <!-- TAB 6: PROFILE -->
+        <!-- MOBILE TAB 4: PROFILE -->
         <section id="tabProfile" class="hidden space-y-4 animate-app-slide">
           <div class="bg-white rounded-3xl p-6 border border-slate-200/80 text-center space-y-2 shadow-sm">
             <div class="w-16 h-16 bg-gradient-to-tr from-brand-700 to-teal-500 text-white rounded-full flex items-center justify-center text-2xl font-extrabold mx-auto shadow-md">
@@ -356,206 +321,395 @@
 
       </main>
 
-      <!-- BOTTOM NAVIGATION BAR -->
+      <!-- BOTTOM MOBILE NAVIGATION BAR -->
       <nav class="bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-2.5 flex justify-around items-center z-30 shrink-0">
-        <button onclick="playClickSound(); switchTab('tabEvents');" id="nav-tabEvents" class="nav-btn active flex flex-col items-center gap-0.5 text-brand-600 font-extrabold text-[9px] transition active:scale-90">
+        <button onclick="playClickSound(); switchMobileTab('tabEvents');" id="nav-tabEvents" class="nav-btn active flex flex-col items-center gap-0.5 text-brand-600 font-extrabold text-[9px] transition active:scale-90">
           <i class="fa-solid fa-calendar-days text-base"></i>
           <span>Events</span>
         </button>
         
-        <button onclick="playClickSound(); switchTab('tabBookings');" id="nav-tabBookings" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
+        <button onclick="playClickSound(); switchMobileTab('tabBookings');" id="nav-tabBookings" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
           <i class="fa-solid fa-ticket text-base"></i>
           <span>My Passes</span>
         </button>
 
-        <button onclick="playClickSound(); switchTab('tabOrganizerReview');" id="nav-tabOrganizerReview" class="nav-btn hidden flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
+        <button onclick="playClickSound(); switchMobileTab('tabOrganizerReview');" id="nav-tabOrganizerReview" class="nav-btn hidden flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
           <i class="fa-solid fa-clipboard-list text-base"></i>
           <span>Staff Console</span>
         </button>
 
-        <button onclick="playClickSound(); switchTab('tabAdminApproval');" id="nav-tabAdminApproval" class="nav-btn hidden flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
-          <i class="fa-solid fa-user-check text-base"></i>
-          <span>Admin Console</span>
-        </button>
-
-        <button onclick="playClickSound(); switchTab('tabLogs');" id="nav-tabLogs" class="nav-btn hidden flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
-          <i class="fa-solid fa-shield-cat text-base"></i>
-          <span>Log Trail</span>
-        </button>
-
-        <button onclick="playClickSound(); switchTab('tabProfile');" id="nav-tabProfile" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
+        <button onclick="playClickSound(); switchMobileTab('tabProfile');" id="nav-tabProfile" class="nav-btn flex flex-col items-center gap-0.5 text-slate-400 font-medium text-[9px] transition active:scale-90">
           <i class="fa-solid fa-circle-user text-base"></i>
           <span>Profile</span>
         </button>
       </nav>
 
     </div>
-
-    <!-- MODAL: PROPOSE NEW PLACE/EVENT -->
-    <div id="proposePlaceModal" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl space-y-3.5 animate-modal-pop">
-        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-          <h3 class="text-sm font-extrabold text-slate-900">Propose / Add Tourism Spot</h3>
-          <button onclick="playClickSound(); closeProposeModal();" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <form onsubmit="submitProposedPlace(event)" class="space-y-2.5 text-left">
-          <div>
-            <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Title / Spot Name</label>
-            <input type="text" id="propTitle" required class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="e.g. Alta Vista Golf & Country Club">
-          </div>
-
-          <div>
-            <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Category</label>
-            <select id="propCategory" required class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold">
-              <option value="Culture">Culture</option>
-              <option value="Food & Crafts">Food & Crafts</option>
-              <option value="Heritage">Heritage</option>
-              <option value="Eco Tourism">Eco Tourism</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Location</label>
-            <input type="text" id="propLocation" required class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="Location address">
-          </div>
-
-          <div>
-            <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Event Date</label>
-            <input type="date" id="propDate" required class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold">
-          </div>
-
-          <div>
-            <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Image URL</label>
-            <input type="url" id="propImage" class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="https://images.unsplash.com/...">
-          </div>
-
-          <div>
-            <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Initial Available Tickets</label>
-            <input type="number" id="propSlots" min="1" value="50" required class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold">
-          </div>
-
-          <button type="submit" onclick="playClickSound()" class="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition active:scale-95 shadow-sm mt-1">
-            Save Spot
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- MODAL: OTP ACCOUNT RECOVERY -->
-    <div id="otpRecoveryModal" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl space-y-3.5 animate-modal-pop">
-        <div class="w-12 h-12 bg-brand-100 text-brand-700 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-inner">
-          <i class="fa-solid fa-key"></i>
-        </div>
-        <div>
-          <h3 class="text-base font-extrabold text-slate-900">OTP Account Recovery</h3>
-          <p class="text-[10px] text-slate-500 font-medium mt-0.5">Enter registered email to receive 6-digit Security OTP</p>
-        </div>
-
-        <div class="space-y-2 text-left">
-          <input type="email" id="otpTargetEmail" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="e.g. visitor@example.com">
-          <button type="button" onclick="playClickSound(); sendRecoveryOtp();" class="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition active:scale-95">Send OTP Code</button>
-        </div>
-
-        <div id="otpInputGroup" class="hidden space-y-2 text-left border-t border-slate-100 pt-2">
-          <label class="block text-[10px] font-extrabold text-slate-600 uppercase">Enter 6-Digit OTP</label>
-          <input type="text" id="otpCodeInput" maxlength="6" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-center tracking-widest text-sm font-mono font-bold" placeholder="123456">
-          <input type="password" id="otpNewPassword" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="New Strong Password">
-          <button type="button" onclick="playClickSound(); verifyOtpAndResetPassword();" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition active:scale-95">Reset Password</button>
-        </div>
-
-        <button type="button" onclick="playClickSound(); closeOtpModal();" class="text-xs text-slate-400 font-semibold hover:underline pt-1">Cancel</button>
-      </div>
-    </div>
-
-    <!-- MODAL: EVENT DETAILS -->
-    <div id="eventDetailModal" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-end md:items-center justify-center p-0 md:p-4 animate-app-slide">
-      <div class="bg-white w-full max-w-md rounded-t-[32px] md:rounded-[32px] max-h-[90vh] overflow-y-auto p-6 space-y-4 shadow-2xl relative animate-modal-pop">
-        
-        <!-- PLACE BANNER IMAGE WITH FALLBACK -->
-        <div class="w-full h-36 rounded-2xl overflow-hidden bg-slate-100 mb-2 shadow-inner">
-          <img id="modalEventImage" src="" alt="Spot Photo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
-        </div>
-
-        <button onclick="playClickSound(); closeEventModal();" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 text-xs transition active:scale-95">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-
-        <div class="space-y-1">
-          <div class="flex justify-between items-center">
-            <span id="modalEventCategory" class="text-[9px] font-extrabold bg-brand-100 text-brand-800 px-2.5 py-0.5 rounded-full uppercase">Culture</span>
-            <span id="modalEventSlotsBadge" class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">Available: 50 Tickets</span>
-          </div>
-          <h3 id="modalEventTitle" class="text-lg font-extrabold text-slate-900 leading-tight pt-1">Event Title</h3>
-        </div>
-
-        <div class="space-y-2 text-xs text-slate-600 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-location-dot text-brand-600 w-4 text-sm"></i>
-            <span id="modalEventLocation" class="font-medium">Location Name</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-clock text-brand-600 w-4 text-sm"></i>
-            <span id="modalEventDate" class="font-medium">Event Date & Time</span>
-          </div>
-        </div>
-
-        <div>
-          <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1">Description</h4>
-          <p id="modalEventDescription" class="text-xs text-slate-600 leading-relaxed font-medium">Detailed event description.</p>
-        </div>
-
-        <div id="modalVisitorActionForm" class="border-t border-slate-100 pt-3 space-y-3">
-          <div>
-            <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-1">Select Number of Tickets</label>
-            <select id="ticketQtySelect" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-brand-500">
-              <option value="1">1 Ticket (Individual Pass)</option>
-              <option value="2">2 Tickets (Pair Pass)</option>
-              <option value="4">4 Tickets (Group Pass)</option>
-            </select>
-          </div>
-
-          <button onclick="playClickSound(); submitEventApplication();" id="confirmRegisterBtn" class="w-full bg-gradient-to-r from-brand-700 via-brand-600 to-teal-500 hover:from-brand-800 hover:to-teal-600 text-white font-bold py-3 rounded-2xl shadow-lg shadow-teal-600/30 text-xs transition active:scale-95">
-            Submit Application
-          </button>
-        </div>
-
-        <div id="modalOrganizerStockForm" class="hidden border-t border-slate-100 pt-3 space-y-2">
-          <label class="block text-[10px] font-extrabold text-slate-600 uppercase">Add More Ticket Inventory</label>
-          <div class="flex gap-2">
-            <input type="number" id="addTicketQtyInput" min="1" value="10" class="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold">
-            <button onclick="playClickSound(); addTicketInventory();" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition active:scale-95">Add Slots</button>
-          </div>
-        </div>
-
-        <div id="modalStaffNotice" class="hidden border-t border-slate-100 pt-3 text-center">
-          <p class="text-xs text-slate-600 font-semibold bg-slate-100 p-3.5 rounded-2xl border border-slate-200">
-            <i class="fa-solid fa-user-shield text-brand-600 mr-1.5"></i> Staff Mode: Visitors buy tickets directly; Organizers directly approve user tickets.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- MODAL: LOGOUT CONFIRMATION -->
-    <div id="logoutModal" class="hidden fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl space-y-4 animate-modal-pop">
-        <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-        </div>
-        <div>
-          <h3 class="text-base font-extrabold text-slate-900">Confirm Logout</h3>
-          <p class="text-xs text-slate-500 font-medium mt-1">Are you sure you want to log out?</p>
-        </div>
-        <div class="flex space-x-2 pt-1">
-          <button onclick="playClickSound(); closeLogoutModal();" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition active:scale-95">Cancel</button>
-          <button onclick="playClickSound(); executeLogoutAction();" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-xs font-bold transition active:scale-95">Yes, Confirm</button>
-        </div>
-      </div>
-    </div>
-
   </div>
 
+
+  <!-- ========================================== -->
+  <!-- 2. DESKTOP WEB ADMIN DASHBOARD (ADMIN ONLY) -->
+  <!-- ========================================== -->
+  <div id="webAdminDashboard" class="hidden w-full max-w-7xl mx-auto min-h-screen md:min-h-[90vh] bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl flex overflow-hidden animate-app-slide">
+    
+    <!-- LEFT SIDEBAR NAV -->
+    <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between p-5 text-slate-300">
+      <div class="space-y-6">
+        <!-- Logo Header -->
+        <div class="flex items-center gap-3 px-2">
+          <div class="w-10 h-10 bg-gradient-to-tr from-brand-600 to-teal-400 text-white rounded-2xl flex items-center justify-center text-xl font-black shadow-lg shadow-teal-500/20">
+            <i class="fa-solid fa-compass"></i>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-base text-white tracking-tight">TourLynk</h1>
+            <p class="text-[10px] font-bold text-teal-400 uppercase tracking-widest">Admin Control</p>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="space-y-1.5 pt-2">
+          <button onclick="switchAdminSection('secOverview')" id="adminNav-secOverview" class="admin-nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold text-white bg-brand-600/20 border border-brand-500/30 transition">
+            <i class="fa-solid fa-chart-pie text-brand-400 text-sm"></i>
+            <span>Overview & Spots</span>
+          </button>
+
+          <button onclick="switchAdminSection('secProposed')" id="adminNav-secProposed" class="admin-nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+            <i class="fa-solid fa-map-location-dot text-amber-400 text-sm"></i>
+            <span>Proposed Places</span>
+            <span id="badgePendingCount" class="ml-auto text-[9px] font-black bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">0</span>
+          </button>
+
+          <button onclick="switchAdminSection('secLogs')" id="adminNav-secLogs" class="admin-nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+            <i class="fa-solid fa-shield-cat text-teal-400 text-sm"></i>
+            <span>Security Audit Logs</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Admin Profile & Sign Out Footer -->
+      <div class="pt-4 border-t border-slate-800/80 space-y-3">
+        <div class="flex items-center gap-3 px-2">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-rose-600 to-amber-500 text-white font-extrabold flex items-center justify-center text-sm shadow-md">
+            A
+          </div>
+          <div class="min-w-0 flex-1">
+            <h4 class="text-xs font-extrabold text-white truncate" id="webAdminName">System Admin</h4>
+            <p class="text-[10px] text-slate-400 truncate">admin@tourlynk.gov.ph</p>
+          </div>
+        </div>
+
+        <button onclick="playClickSound(); promptLogoutDialog();" class="w-full py-2.5 px-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-power-off text-xs"></i>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT DASHBOARD -->
+    <main class="flex-1 flex flex-col overflow-hidden bg-slate-900 text-slate-100">
+      
+      <!-- Top Navigation Header -->
+      <header class="h-16 border-b border-slate-800 px-8 flex justify-between items-center bg-slate-950/40 backdrop-blur-md shrink-0">
+        <div class="flex items-center gap-3">
+          <h2 class="text-sm font-extrabold text-slate-200 uppercase tracking-wider" id="adminHeaderTitle">Dashboard Overview</h2>
+          <span class="text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">Supabase Live Sync</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button onclick="playClickSound(); openProposeModal();" class="bg-gradient-to-r from-brand-600 to-teal-500 hover:from-brand-700 hover:to-teal-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-lg shadow-teal-500/20 active:scale-95 transition flex items-center gap-2">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>Add Tourism Spot</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Admin Content Body -->
+      <div class="flex-1 overflow-y-auto p-8 space-y-8">
+        
+        <!-- ADMIN STATS WIDGETS -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-slate-800/60 border border-slate-700/60 p-5 rounded-2xl flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-2xl flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-map-pin"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Tourism Spots</p>
+              <h3 class="text-2xl font-extrabold text-white mt-0.5" id="statTotalSpots">0</h3>
+            </div>
+          </div>
+
+          <div class="bg-slate-800/60 border border-slate-700/60 p-5 rounded-2xl flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-2xl flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pending Proposals</p>
+              <h3 class="text-2xl font-extrabold text-white mt-0.5" id="statPendingProposals">0</h3>
+            </div>
+          </div>
+
+          <div class="bg-slate-800/60 border border-slate-700/60 p-5 rounded-2xl flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-brand-500/10 text-brand-400 border border-brand-500/20 rounded-2xl flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-ticket"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Applications</p>
+              <h3 class="text-2xl font-extrabold text-white mt-0.5" id="statTotalApps">0</h3>
+            </div>
+          </div>
+
+          <div class="bg-slate-800/60 border border-slate-700/60 p-5 rounded-2xl flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-2xl flex items-center justify-center text-xl shrink-0">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">System Audit Logs</p>
+              <h3 class="text-2xl font-extrabold text-white mt-0.5" id="statTotalLogs">0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN SECTION 1: OVERVIEW & SPOTS TABLE -->
+        <section id="secOverview" class="admin-section space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fa-solid fa-layer-group text-brand-400"></i> Active Tourism Spots Catalog
+            </h3>
+          </div>
+
+          <div class="bg-slate-800/40 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs text-slate-300">
+                <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th class="py-3.5 px-4 font-bold">Spot Details</th>
+                    <th class="py-3.5 px-4 font-bold">Category</th>
+                    <th class="py-3.5 px-4 font-bold">Location</th>
+                    <th class="py-3.5 px-4 font-bold">Available Slots</th>
+                    <th class="py-3.5 px-4 font-bold">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="webAdminSpotsTable" class="divide-y divide-slate-800/60 font-medium">
+                  <!-- Dynamic rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ADMIN SECTION 2: PROPOSED PLACES APPROVAL -->
+        <section id="secProposed" class="admin-section hidden space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fa-solid fa-map-location-dot text-amber-400"></i> Proposed Places Pending Admin Review
+            </h3>
+            <p class="text-xs text-slate-400 font-medium">Review and approve spots submitted by Event Organizers / Staff.</p>
+          </div>
+
+          <div id="webAdminProposedGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Dynamic proposed place cards -->
+          </div>
+        </section>
+
+        <!-- ADMIN SECTION 3: SYSTEM AUDIT LOG TRAIL -->
+        <section id="secLogs" class="admin-section hidden space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <i class="fa-solid fa-shield-cat text-teal-400"></i> Cross-Role Security Audit Log Trail
+            </h3>
+            <button onclick="playClickSound(); fetchAuditLogs();" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-700 transition">Refresh Feed</button>
+          </div>
+
+          <div class="bg-slate-800/40 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs text-slate-300">
+                <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th class="py-3.5 px-4 font-bold">Action</th>
+                    <th class="py-3.5 px-4 font-bold">Username</th>
+                    <th class="py-3.5 px-4 font-bold">Details</th>
+                    <th class="py-3.5 px-4 font-bold">Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody id="webAdminLogsTable" class="divide-y divide-slate-800/60 font-medium">
+                  <!-- Dynamic log rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 3. MODALS (SHARED ACROSS BOTH VIEWS) -->
+  <!-- ========================================== -->
+
+  <!-- MODAL: PROPOSE / ADD NEW PLACE -->
+  <div id="proposePlaceModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-modal-pop text-slate-800">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-extrabold text-slate-900">Propose / Add Tourism Spot</h3>
+        <button onclick="playClickSound(); closeProposeModal();" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form onsubmit="submitProposedPlace(event)" class="space-y-3 text-left">
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Title / Spot Name</label>
+          <input type="text" id="propTitle" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="e.g. Alta Vista Golf & Country Club">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Category</label>
+          <select id="propCategory" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="Culture">Culture</option>
+            <option value="Food & Crafts">Food & Crafts</option>
+            <option value="Heritage">Heritage</option>
+            <option value="Eco Tourism">Eco Tourism</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Location Address</label>
+          <input type="text" id="propLocation" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Location address">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Event Date</label>
+          <input type="date" id="propDate" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Image URL</label>
+          <input type="url" id="propImage" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="https://images.unsplash.com/...">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Initial Available Slots</label>
+          <input type="number" id="propSlots" min="1" value="50" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+
+        <button type="submit" onclick="playClickSound()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 shadow-md shadow-brand-600/30 mt-2">
+          Save Spot
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: OTP ACCOUNT RECOVERY -->
+  <div id="otpRecoveryModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl space-y-3.5 animate-modal-pop text-slate-800">
+      <div class="w-12 h-12 bg-brand-100 text-brand-700 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-inner">
+        <i class="fa-solid fa-key"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-extrabold text-slate-900">OTP Account Recovery</h3>
+        <p class="text-[10px] text-slate-500 font-medium mt-0.5">Enter registered email to receive 6-digit Security OTP</p>
+      </div>
+
+      <div class="space-y-2 text-left">
+        <input type="email" id="otpTargetEmail" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="e.g. visitor@example.com">
+        <button type="button" onclick="playClickSound(); sendRecoveryOtp();" class="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition active:scale-95">Send OTP Code</button>
+      </div>
+
+      <div id="otpInputGroup" class="hidden space-y-2 text-left border-t border-slate-100 pt-2">
+        <label class="block text-[10px] font-extrabold text-slate-600 uppercase">Enter 6-Digit OTP</label>
+        <input type="text" id="otpCodeInput" maxlength="6" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-center tracking-widest text-sm font-mono font-bold" placeholder="123456">
+        <input type="password" id="otpNewPassword" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="New Strong Password">
+        <button type="button" onclick="playClickSound(); verifyOtpAndResetPassword();" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition active:scale-95">Reset Password</button>
+      </div>
+
+      <button type="button" onclick="playClickSound(); closeOtpModal();" class="text-xs text-slate-400 font-semibold hover:underline pt-1">Cancel</button>
+    </div>
+  </div>
+
+  <!-- MODAL: EVENT DETAILS (MOBILE ONLY) -->
+  <div id="eventDetailModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-end md:items-center justify-center p-0 md:p-4 animate-app-slide">
+    <div class="bg-white w-full max-w-md rounded-t-[32px] md:rounded-[32px] max-h-[90vh] overflow-y-auto p-6 space-y-4 shadow-2xl relative animate-modal-pop text-slate-800">
+      
+      <!-- PLACE BANNER IMAGE -->
+      <div class="w-full h-36 rounded-2xl overflow-hidden bg-slate-100 mb-2 shadow-inner">
+        <img id="modalEventImage" src="" alt="Spot Photo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
+      </div>
+
+      <button onclick="playClickSound(); closeEventModal();" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 text-xs transition active:scale-95">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="space-y-1">
+        <div class="flex justify-between items-center">
+          <span id="modalEventCategory" class="text-[9px] font-extrabold bg-brand-100 text-brand-800 px-2.5 py-0.5 rounded-full uppercase">Culture</span>
+          <span id="modalEventSlotsBadge" class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">Available: 50 Tickets</span>
+        </div>
+        <h3 id="modalEventTitle" class="text-lg font-extrabold text-slate-900 leading-tight pt-1">Event Title</h3>
+      </div>
+
+      <div class="space-y-2 text-xs text-slate-600 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-location-dot text-brand-600 w-4 text-sm"></i>
+          <span id="modalEventLocation" class="font-medium">Location Name</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-clock text-brand-600 w-4 text-sm"></i>
+          <span id="modalEventDate" class="font-medium">Event Date & Time</span>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1">Description</h4>
+        <p id="modalEventDescription" class="text-xs text-slate-600 leading-relaxed font-medium">Detailed event description.</p>
+      </div>
+
+      <div id="modalVisitorActionForm" class="border-t border-slate-100 pt-3 space-y-3">
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-1">Select Number of Tickets</label>
+          <select id="ticketQtySelect" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-brand-500">
+            <option value="1">1 Ticket (Individual Pass)</option>
+            <option value="2">2 Tickets (Pair Pass)</option>
+            <option value="4">4 Tickets (Group Pass)</option>
+          </select>
+        </div>
+
+        <button onclick="playClickSound(); submitEventApplication();" id="confirmRegisterBtn" class="w-full bg-gradient-to-r from-brand-700 via-brand-600 to-teal-500 hover:from-brand-800 hover:to-teal-600 text-white font-bold py-3 rounded-2xl shadow-lg shadow-teal-600/30 text-xs transition active:scale-95">
+          Submit Application
+        </button>
+      </div>
+
+      <div id="modalOrganizerStockForm" class="hidden border-t border-slate-100 pt-3 space-y-2">
+        <label class="block text-[10px] font-extrabold text-slate-600 uppercase">Add More Ticket Inventory</label>
+        <div class="flex gap-2">
+          <input type="number" id="addTicketQtyInput" min="1" value="10" class="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold">
+          <button onclick="playClickSound(); addTicketInventory();" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition active:scale-95">Add Slots</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LOGOUT CONFIRMATION -->
+  <div id="logoutModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl space-y-4 animate-modal-pop text-slate-800">
+      <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-extrabold text-slate-900">Confirm Logout</h3>
+        <p class="text-xs text-slate-500 font-medium mt-1">Are you sure you want to log out?</p>
+      </div>
+      <div class="flex space-x-2 pt-1">
+        <button onclick="playClickSound(); closeLogoutModal();" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition active:scale-95">Cancel</button>
+        <button onclick="playClickSound(); executeLogoutAction();" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-2xl text-xs font-bold transition active:scale-95">Yes, Confirm</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 4. JAVASCRIPT LOGIC & SUPABASE INTEGRATION -->
+  <!-- ========================================== -->
   <script>
     // WEB AUDIO CLICK SYNTHESIZER
     let audioCtx = null;
@@ -601,7 +755,7 @@
     const BASE_LOCKOUT_MS = 30 * 1000;
     const MAX_FAILED_ATTEMPTS = 3;
 
-    // WORKING IMAGE URLS FROM UNSPLASH
+    // DEFAULT SPOTS DATA
     const defaultVillabaSpots = [
       {
         id: "1",
@@ -613,7 +767,6 @@
         available_slots: 50,
         status: "Approved",
         badgeColor: "bg-emerald-100 text-emerald-800",
-        icon: "fa-monument",
         image_url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
       },
       {
@@ -626,7 +779,6 @@
         available_slots: 30,
         status: "Approved",
         badgeColor: "bg-teal-100 text-teal-800",
-        icon: "fa-water",
         image_url: "https://images.unsplash.com/photo-1432405972618-c30b0225b20c?auto=format&fit=crop&w=800&q=80"
       },
       {
@@ -639,7 +791,6 @@
         available_slots: 40,
         status: "Approved",
         badgeColor: "bg-purple-100 text-purple-800",
-        icon: "fa-tree",
         image_url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
       },
       {
@@ -652,7 +803,6 @@
         available_slots: 25,
         status: "Approved",
         badgeColor: "bg-amber-100 text-amber-800",
-        icon: "fa-mountain",
         image_url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80"
       },
       {
@@ -665,7 +815,6 @@
         available_slots: 60,
         status: "Approved",
         badgeColor: "bg-sky-100 text-sky-800",
-        icon: "fa-umbrella-beach",
         image_url: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=800&q=80"
       }
     ];
@@ -692,10 +841,12 @@
 
     function startClock() {
       const clockElement = document.getElementById('liveClock');
-      setInterval(() => {
-        const now = new Date();
-        clockElement.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-      }, 1000);
+      if (clockElement) {
+        setInterval(() => {
+          const now = new Date();
+          clockElement.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        }, 1000);
+      }
     }
 
     function showToast(message, type = 'error') {
@@ -788,36 +939,12 @@
               id: String(item.id),
               badgeColor: item.badge_color || item.badgeColor || 'bg-emerald-100 text-emerald-800'
             }));
-          } else {
-            eventsList = defaultVillabaSpots;
-            for (const spot of defaultVillabaSpots) {
-              const payload = {
-                id: String(spot.id),
-                title: spot.title,
-                category: spot.category,
-                description: spot.description,
-                location: spot.location,
-                date: spot.date,
-                available_slots: spot.available_slots,
-                status: spot.status || 'Approved',
-                badge_color: spot.badgeColor,
-                image_url: spot.image_url,
-                proposed_by: 'admin'
-              };
-
-              await fetch(`${SUPABASE_URL}/rest/v1/events`, {
-                method: 'POST',
-                headers: supabaseHeaders,
-                body: JSON.stringify(payload)
-              });
-            }
           }
         }
-      } catch (err) {
-        eventsList = defaultVillabaSpots;
-      }
+      } catch (err) {}
       saveEventsDB();
       renderEventsList(eventsList);
+      refreshWebAdminDashboard();
     }
 
     async function fetchSupabaseApplications() {
@@ -834,9 +961,8 @@
             localStorage.setItem('tourlynk_applications_store', JSON.stringify(sharedApplicationsStore));
           }
         }
-      } catch (err) {
-        console.error('Failed to fetch applications:', err);
-      }
+      } catch (err) {}
+      refreshWebAdminDashboard();
     }
 
     async function handleLoginSubmit(e) {
@@ -868,21 +994,11 @@
         try {
           const queryUrl = `${SUPABASE_URL}/rest/v1/users?or=(username.eq.${encodeURIComponent(usernameInput)},email.eq.${encodeURIComponent(usernameInput)})&password=eq.${encodeURIComponent(passwordInput)}&select=*`;
           const response = await fetch(queryUrl, { headers: supabaseHeaders });
-          
           if (response.ok) {
             const dbUsers = await response.json();
-            if (dbUsers && dbUsers.length > 0) {
-              matchedUser = dbUsers[0];
-            }
+            if (dbUsers && dbUsers.length > 0) matchedUser = dbUsers[0];
           }
-        } catch (err) {
-          console.error('Supabase auth error:', err);
-        }
-      }
-
-      if (!matchedUser) {
-        const localUsers = JSON.parse(localStorage.getItem('tourlynk_local_users') || '[]');
-        matchedUser = localUsers.find(u => (u.username === usernameInput || u.email === usernameInput) && u.password === passwordInput);
+        } catch (err) {}
       }
 
       if (matchedUser) {
@@ -950,11 +1066,7 @@
         });
       } catch (err) {}
 
-      const localUsers = JSON.parse(localStorage.getItem('tourlynk_local_users') || '[]');
-      localUsers.push(newUserPayload);
-      localStorage.setItem('tourlynk_local_users', JSON.stringify(localUsers));
-
-      recordAuditLog(username, 'USER_REGISTER', `Registered new account as ${role} and synced to database.`);
+      recordAuditLog(username, 'USER_REGISTER', `Registered new account as ${role}.`);
       document.getElementById('registerForm').reset();
       showToast(`Registered successfully as ${role.toUpperCase()}!`, 'success');
       setTimeout(() => switchAuthTab('login'), 1200);
@@ -1041,16 +1153,14 @@
           headers: supabaseHeaders,
           body: JSON.stringify(supabasePayload)
         });
-      } catch (err) {
-        console.error('Failed to post spot to Supabase:', err);
-      }
+      } catch (err) {}
 
       recordAuditLog(currentUser ? currentUser.username : 'admin', 'CREATE_PLACE', `Created tourism place "${newPlace.title}" with status: ${initialStatus}.`);
 
       closeProposeModal();
       showToast(isAdmin ? 'New Tourism Spot Added & Live!' : 'Proposal Submitted for Admin Review!', 'success');
       renderEventsList(eventsList);
-      if (isAdmin) renderAdminProposedEvents();
+      refreshWebAdminDashboard();
     }
 
     async function addTicketInventory() {
@@ -1067,25 +1177,40 @@
             headers: supabaseHeaders,
             body: JSON.stringify({ available_slots: updatedSlots })
           });
-        } catch (err) {
-          console.error('Failed to update ticket slots in Supabase:', err);
-        }
+        } catch (err) {}
 
         saveEventsDB();
         renderEventsList(eventsList);
+        refreshWebAdminDashboard();
         document.getElementById('modalEventSlotsBadge').innerText = `Available: ${updatedSlots} Tickets`;
         showToast(`Added +${extra} ticket inventory!`, 'success');
         recordAuditLog(currentUser.username, 'ADD_TICKET_STOCK', `Added ${extra} tickets to event "${selectedEventForBooking.title}"`);
       }
     }
 
+    // ROLE-BASED DASHBOARD ROUTER
     function proceedToDashboard() {
-      document.getElementById('authModule').classList.add('hidden');
-      document.getElementById('mainAppModule').classList.remove('hidden');
-      setupDashboardUserData();
+      if (!currentUser) return;
+
+      const isWebAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
+
+      if (isWebAdmin) {
+        // Hide Mobile Shell, Expand Body, Render Desktop Admin Dashboard
+        document.getElementById('mobileAppShell').classList.add('hidden');
+        document.getElementById('webAdminDashboard').classList.remove('hidden');
+        document.getElementById('webAdminName').innerText = currentUser.full_name;
+        refreshWebAdminDashboard();
+      } else {
+        // Show Mobile Shell, Render Tourist/Staff Dashboard
+        document.getElementById('webAdminDashboard').classList.add('hidden');
+        document.getElementById('mobileAppShell').classList.remove('hidden');
+        document.getElementById('authModule').classList.add('hidden');
+        document.getElementById('mainAppModule').classList.remove('hidden');
+        setupMobileDashboardUserData();
+      }
     }
 
-    function setupDashboardUserData() {
+    function setupMobileDashboardUserData() {
       if (!currentUser) return;
 
       document.getElementById('userWelcomeName').innerText = currentUser.full_name;
@@ -1098,41 +1223,27 @@
 
       document.getElementById('nav-tabBookings').classList.add('hidden');
       document.getElementById('nav-tabOrganizerReview').classList.add('hidden');
-      document.getElementById('nav-tabAdminApproval').classList.add('hidden');
-      document.getElementById('nav-tabLogs').classList.add('hidden');
 
       if (currentUser.role === 'visitor') {
         document.getElementById('welcomeSubtitleText').innerText = 'Select an event below to check remaining tickets & apply';
         document.getElementById('nav-tabBookings').classList.remove('hidden');
         renderVisitorBookingsTab();
-        switchTab('tabEvents');
+        switchMobileTab('tabEvents');
       } else if (currentUser.role === 'organizer') {
         document.getElementById('welcomeSubtitleText').innerText = 'Approve visitor tickets directly & propose places to Admin';
         document.getElementById('nav-tabOrganizerReview').classList.remove('hidden');
         renderOrganizerApplications();
-        switchTab('tabEvents');
-      } else if (currentUser.role === 'admin' || currentUser.role === 'superadmin') {
-        document.getElementById('welcomeSubtitleText').innerText = 'Review & approve proposed tourism places';
-        document.getElementById('nav-tabAdminApproval').classList.remove('hidden');
-        document.getElementById('nav-tabLogs').classList.remove('hidden');
-        renderAdminProposedEvents();
-        fetchAuditLogs();
-        switchTab('tabEvents');
+        switchMobileTab('tabEvents');
       }
     }
 
-    function switchTab(tabId) {
-      if (tabId === 'tabLogs' && (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin'))) {
-        showToast('Access Denied: Only Administrators can view the Audit Log Trail.', 'error');
-        return;
-      }
-
-      ['tabEvents', 'tabBookings', 'tabOrganizerReview', 'tabAdminApproval', 'tabLogs', 'tabProfile'].forEach(id => {
+    function switchMobileTab(tabId) {
+      ['tabEvents', 'tabBookings', 'tabOrganizerReview', 'tabProfile'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
 
-      document.querySelectorAll('.nav-btn').forEach(btn => {
+      document.querySelectorAll('#mobileAppShell .nav-btn').forEach(btn => {
         btn.classList.remove('text-brand-600', 'font-extrabold');
         btn.classList.add('text-slate-400', 'font-medium');
       });
@@ -1147,18 +1258,110 @@
       }
     }
 
+    // WEB ADMIN DASHBOARD FUNCTIONS
+    function switchAdminSection(secId) {
+      document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
+      document.querySelectorAll('.admin-nav-item').forEach(item => {
+        item.classList.remove('text-white', 'bg-brand-600/20', 'border-brand-500/30');
+        item.classList.add('text-slate-400');
+      });
+
+      const activeSec = document.getElementById(secId);
+      if (activeSec) activeSec.classList.remove('hidden');
+
+      const activeNav = document.getElementById(`adminNav-${secId}`);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-400');
+        activeNav.classList.add('text-white', 'bg-brand-600/20', 'border', 'border-brand-500/30');
+      }
+
+      const titleMap = {
+        'secOverview': 'Overview & Active Spots',
+        'secProposed': 'Proposed Places Pending Admin Review',
+        'secLogs': 'Security Audit Trail'
+      };
+      document.getElementById('adminHeaderTitle').innerText = titleMap[secId] || 'Admin Dashboard';
+    }
+
+    function refreshWebAdminDashboard() {
+      const activeSpots = eventsList.filter(e => !e.status || e.status === 'Approved');
+      const pendingSpots = eventsList.filter(e => e.status === 'Pending Admin Approval');
+
+      // Update Stats
+      document.getElementById('statTotalSpots').innerText = activeSpots.length;
+      document.getElementById('statPendingProposals').innerText = pendingSpots.length;
+      document.getElementById('statTotalApps').innerText = sharedApplicationsStore.length;
+      document.getElementById('statTotalLogs').innerText = loadedAuditLogs.length;
+      document.getElementById('badgePendingCount').innerText = pendingSpots.length;
+
+      // Render Active Spots Table
+      const spotsTableBody = document.getElementById('webAdminSpotsTable');
+      if (spotsTableBody) {
+        if (activeSpots.length === 0) {
+          spotsTableBody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500">No active tourism spots in database.</td></tr>`;
+        } else {
+          spotsTableBody.innerHTML = activeSpots.map(s => `
+            <tr class="hover:bg-slate-800/40 transition">
+              <td class="py-3 px-4 font-bold text-white flex items-center gap-3">
+                <img src="${s.image_url}" class="w-9 h-9 rounded-xl object-cover border border-slate-700">
+                <span>${s.title}</span>
+              </td>
+              <td class="py-3 px-4"><span class="bg-teal-500/10 text-teal-300 border border-teal-500/20 px-2 py-0.5 rounded-full text-[10px] font-bold">${s.category || 'General'}</span></td>
+              <td class="py-3 px-4 text-slate-400">${s.location}</td>
+              <td class="py-3 px-4 font-mono font-bold text-amber-400">${s.available_slots} Slots</td>
+              <td class="py-3 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold">Approved</span></td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      // Render Proposed Places Grid
+      const proposedGrid = document.getElementById('webAdminProposedGrid');
+      if (proposedGrid) {
+        if (pendingSpots.length === 0) {
+          proposedGrid.innerHTML = `<div class="col-span-2 py-10 text-center bg-slate-800/40 border border-slate-800 rounded-2xl text-slate-400 font-semibold text-xs">No pending proposed places from Organizers.</div>`;
+        } else {
+          proposedGrid.innerHTML = pendingSpots.map(p => `
+            <div class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-4 flex gap-4 items-center shadow-lg">
+              <img src="${p.image_url}" class="w-20 h-20 rounded-xl object-cover border border-slate-700 shrink-0">
+              <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-center">
+                  <span class="text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">${p.status}</span>
+                  <span class="text-[10px] text-slate-400 font-mono">ID: ${p.id}</span>
+                </div>
+                <h4 class="text-xs font-extrabold text-white mt-1 truncate">${p.title}</h4>
+                <p class="text-[10px] text-slate-400 truncate"><i class="fa-solid fa-location-dot text-brand-400 mr-1"></i>${p.location}</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">Proposed by: <strong class="text-slate-200">@${p.proposed_by || 'organizer'}</strong> (${p.available_slots} slots)</p>
+                
+                <div class="flex gap-2 mt-3">
+                  <button onclick="playClickSound(); adminDecisionPlace('${p.id}', 'Approved')" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-[10px] transition active:scale-95 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-check"></i> Approve Place
+                  </button>
+                  <button onclick="playClickSound(); adminDecisionPlace('${p.id}', 'Rejected')" class="flex-1 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-[10px] transition active:scale-95 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-xmark"></i> Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Admin Logs Table
+      renderAuditLogs(loadedAuditLogs);
+    }
+
     function renderEventsList(events) {
       const container = document.getElementById('eventsContainer');
+      if (!container) return;
       const approvedEvents = events.filter(e => !e.status || e.status === 'Approved');
       document.getElementById('eventCountLabel').innerText = `${approvedEvents.length} Events`;
 
       container.innerHTML = approvedEvents.map(ev => `
         <div onclick="playClickSound(); openEventModal('${ev.id}');" class="bg-white rounded-3xl p-3 border border-slate-200/80 shadow-sm hover:shadow-md transition flex gap-3.5 items-center cursor-pointer active:scale-98">
-          
           <div class="w-16 h-16 rounded-2xl overflow-hidden shrink-0 bg-slate-100 shadow-inner">
             <img src="${ev.image_url || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80'}" alt="${ev.title}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
           </div>
-
           <div class="flex-1 min-w-0">
             <div class="flex justify-between items-center">
               <span class="text-[8px] font-extrabold uppercase px-2.5 py-0.5 rounded-full ${ev.badgeColor || 'bg-teal-100 text-teal-800'}">${ev.category || 'General'}</span>
@@ -1177,9 +1380,7 @@
       if (!selectedEventForBooking) return;
 
       const modalImg = document.getElementById('modalEventImage');
-      if (modalImg) {
-        modalImg.src = selectedEventForBooking.image_url || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';
-      }
+      if (modalImg) modalImg.src = selectedEventForBooking.image_url;
 
       document.getElementById('modalEventTitle').innerText = selectedEventForBooking.title;
       document.getElementById('modalEventCategory').innerText = selectedEventForBooking.category || 'General';
@@ -1193,7 +1394,6 @@
 
       document.getElementById('modalVisitorActionForm').classList.toggle('hidden', !isVisitor);
       document.getElementById('modalOrganizerStockForm').classList.toggle('hidden', !isOrganizer);
-      document.getElementById('modalStaffNotice').classList.toggle('hidden', isVisitor || isOrganizer);
 
       document.getElementById('eventDetailModal').classList.remove('hidden');
     }
@@ -1228,9 +1428,7 @@
           headers: supabaseHeaders,
           body: JSON.stringify(newApp)
         });
-      } catch (err) {
-        console.error('Failed to post application to Supabase:', err);
-      }
+      } catch (err) {}
 
       sharedApplicationsStore.unshift({
         ...newApp,
@@ -1244,7 +1442,7 @@
       closeEventModal();
       showToast('Application Submitted! Pending Staff Approval.', 'success');
       renderVisitorBookingsTab();
-      switchTab('tabBookings');
+      switchMobileTab('tabBookings');
     }
 
     function renderVisitorBookingsTab() {
@@ -1369,44 +1567,8 @@
 
         localStorage.setItem('tourlynk_applications_store', JSON.stringify(sharedApplicationsStore));
         renderOrganizerApplications();
-        fetchAuditLogs();
+        refreshWebAdminDashboard();
       }
-    }
-
-    function renderAdminProposedEvents() {
-      const container = document.getElementById('adminProposedEventsContainer');
-      if (!container) return;
-
-      const proposedPlaces = eventsList.filter(e => e.status === 'Pending Admin Approval');
-
-      if (proposedPlaces.length === 0) {
-        container.innerHTML = `<div class="text-center py-6 bg-white rounded-3xl border border-slate-200 text-xs text-slate-500 font-semibold">No pending place proposals from Organizers.</div>`;
-        return;
-      }
-
-      container.innerHTML = proposedPlaces.map(p => `
-        <div class="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm space-y-2">
-          <div class="flex justify-between items-center">
-            <span class="text-[8px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">${p.status}</span>
-            <span class="text-[10px] text-slate-400 font-mono">ID: ${p.id}</span>
-          </div>
-          <div>
-            <h4 class="text-xs font-extrabold text-slate-800">${p.title}</h4>
-            <p class="text-[11px] text-slate-600 font-medium"><i class="fa-solid fa-location-dot text-brand-600 mr-1"></i>${p.location}</p>
-            <p class="text-[10px] text-slate-400 font-medium">Category: ${p.category} | Proposed by: @${p.proposed_by || 'organizer'}</p>
-            <p class="text-[10px] text-slate-400 font-medium">Initial Ticket Stock: ${p.available_slots} tickets</p>
-          </div>
-          
-          <div class="flex gap-2 pt-2 border-t border-slate-100">
-            <button onclick="playClickSound(); adminDecisionPlace('${p.id}', 'Approved')" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 flex items-center justify-center gap-1 shadow-sm">
-              <i class="fa-solid fa-check"></i> Approve Place
-            </button>
-            <button onclick="playClickSound(); adminDecisionPlace('${p.id}', 'Rejected')" class="flex-1 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 flex items-center justify-center gap-1 shadow-sm">
-              <i class="fa-solid fa-xmark"></i> Reject
-            </button>
-          </div>
-        </div>
-      `).join('');
     }
 
     async function adminDecisionPlace(placeId, newStatus) {
@@ -1431,9 +1593,8 @@
         recordAuditLog(currentUser.username, `PROPOSAL_${newStatus.toUpperCase()}`, `Admin ${newStatus.toLowerCase()} proposed tourism place "${place.title}"`);
 
         showToast(`Tourism Place "${place.title}" has been ${newStatus}!`, newStatus === 'Approved' ? 'success' : 'error');
-        renderAdminProposedEvents();
         renderEventsList(eventsList);
-        fetchAuditLogs();
+        refreshWebAdminDashboard();
       }
     }
 
@@ -1453,9 +1614,7 @@
           headers: supabaseHeaders,
           body: JSON.stringify(logItem)
         });
-      } catch (err) {
-        console.error('Failed to save audit log to Supabase:', err);
-      }
+      } catch (err) {}
 
       loadedAuditLogs.unshift(logItem);
       renderAuditLogs(loadedAuditLogs);
@@ -1466,44 +1625,34 @@
         const response = await fetch(`${SUPABASE_URL}/rest/v1/audit_logs?select=*&order=created_at.desc`, { headers: supabaseHeaders });
         if (response.ok) {
           const logs = await response.json();
-          if (logs && logs.length > 0) {
-            loadedAuditLogs = logs;
-          }
+          if (logs && logs.length > 0) loadedAuditLogs = logs;
         }
-      } catch (err) {
-        console.error('Failed to fetch audit logs from Supabase:', err);
-      }
+      } catch (err) {}
       renderAuditLogs(loadedAuditLogs);
     }
 
     function renderAuditLogs(logs) {
-      const container = document.getElementById('auditLogsContainer');
-      if (!container) return;
+      const webLogsTable = document.getElementById('webAdminLogsTable');
+      if (webLogsTable) {
+        if (!logs || logs.length === 0) {
+          webLogsTable.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-500">No audit logs recorded yet.</td></tr>`;
+        } else {
+          webLogsTable.innerHTML = logs.map(l => {
+            let badgeColor = 'bg-sky-500/10 text-sky-400 border-sky-500/20';
+            if (l.action.includes('DECLINED') || l.action.includes('REJECTED') || l.action.includes('LOCKOUT') || l.action === 'FAILED_LOGIN') badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+            if (l.action.includes('APPROVED') || l.action === 'LOGIN_SUCCESS') badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
 
-      if (!logs || logs.length === 0) {
-        container.innerHTML = `<div class="text-center py-6 bg-white rounded-2xl border border-slate-200 text-xs text-slate-500 font-semibold">No audit logs recorded yet.</div>`;
-        return;
+            return `
+              <tr class="hover:bg-slate-800/40 transition">
+                <td class="py-3 px-4"><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${badgeColor}">${l.action}</span></td>
+                <td class="py-3 px-4 font-bold text-white">${l.username}</td>
+                <td class="py-3 px-4 text-slate-300">${l.details}</td>
+                <td class="py-3 px-4 text-slate-400 font-mono text-[10px]">${l.timestamp || ''}</td>
+              </tr>
+            `;
+          }).join('');
+        }
       }
-
-      container.innerHTML = logs.map(l => {
-        let badgeColor = 'bg-sky-100 text-sky-800 border-sky-200';
-        if (l.action.includes('DECLINED') || l.action.includes('REJECTED') || l.action.includes('LOCKOUT') || l.action === 'FAILED_LOGIN') badgeColor = 'bg-rose-100 text-rose-800 border-rose-200';
-        if (l.action.includes('APPROVED') || l.action === 'LOGIN_SUCCESS') badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-200';
-        if (l.action.includes('PROPOSE') || l.action === 'SUBMIT_APPLICATION') badgeColor = 'bg-purple-100 text-purple-800 border-purple-200';
-
-        return `
-          <div class="bg-white p-3 rounded-2xl border border-slate-200/90 shadow-sm space-y-1">
-            <div class="flex justify-between items-center font-bold text-slate-800">
-              <div class="flex items-center gap-1.5">
-                <span class="text-[8px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${badgeColor}">${l.action}</span>
-                <span class="text-xs font-bold text-slate-800">${l.username}</span>
-              </div>
-              <span class="text-[9px] text-slate-400 font-mono">${l.timestamp || ''}</span>
-            </div>
-            <p class="text-slate-600 text-[10px] pl-1 font-medium">${l.details}</p>
-          </div>
-        `;
-      }).join('');
     }
 
     function promptLogoutDialog() { document.getElementById('logoutModal').classList.remove('hidden'); }
@@ -1513,19 +1662,14 @@
       closeLogoutModal();
       currentUser = null;
       
-      ['tabBookings', 'tabOrganizerReview', 'tabAdminApproval', 'tabLogs', 'tabProfile'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
-      });
-      document.getElementById('tabEvents').classList.remove('hidden');
+      // Hide Desktop Web Admin
+      document.getElementById('webAdminDashboard').classList.add('hidden');
 
-      document.getElementById('nav-tabBookings').classList.add('hidden');
-      document.getElementById('nav-tabOrganizerReview').classList.add('hidden');
-      document.getElementById('nav-tabAdminApproval').classList.add('hidden');
-      document.getElementById('nav-tabLogs').classList.add('hidden');
-
+      // Show Mobile Shell Auth
+      document.getElementById('mobileAppShell').classList.remove('hidden');
       document.getElementById('mainAppModule').classList.add('hidden');
       document.getElementById('authModule').classList.remove('hidden');
+      
       document.getElementById('loginForm').reset();
       document.getElementById('registerForm').reset();
       showToast('You have been logged out.', 'success');

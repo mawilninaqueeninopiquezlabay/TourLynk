@@ -488,6 +488,7 @@
                     <th class="py-3.5 px-4 font-bold">Location</th>
                     <th class="py-3.5 px-4 font-bold">Available Slots</th>
                     <th class="py-3.5 px-4 font-bold">Status</th>
+                    <th class="py-3.5 px-4 font-bold text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="webAdminSpotsTable" class="divide-y divide-slate-800/60 font-medium">
@@ -549,15 +550,17 @@
   <!-- 3. MODALS (SHARED ACROSS BOTH VIEWS) -->
   <!-- ========================================== -->
 
-  <!-- MODAL: PROPOSE / ADD NEW PLACE -->
+  <!-- MODAL: PROPOSE / ADD / EDIT TOURISM SPOT -->
   <div id="proposePlaceModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-modal-pop text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-sm font-extrabold text-slate-900">Propose / Add Tourism Spot</h3>
+        <h3 id="propModalTitle" class="text-sm font-extrabold text-slate-900">Propose / Add Tourism Spot</h3>
         <button onclick="playClickSound(); closeProposeModal();" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form onsubmit="submitProposedPlace(event)" class="space-y-3 text-left">
+        <input type="hidden" id="propSpotId">
+
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Title / Spot Name</label>
           <input type="text" id="propTitle" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="e.g. Alta Vista Golf & Country Club">
@@ -594,9 +597,26 @@
         </div>
 
         <button type="submit" onclick="playClickSound()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 shadow-md shadow-brand-600/30 mt-2">
-          Save Spot
+          Save Spot to Supabase
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DELETE CONFIRMATION -->
+  <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl space-y-4 animate-modal-pop text-slate-800">
+      <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-extrabold text-slate-900">Delete Tourism Spot?</h3>
+        <p class="text-xs text-slate-500 font-medium mt-1">Are you sure you want to delete <strong id="deleteTargetTitle" class="text-slate-800"></strong>? This will permanently remove it from Supabase.</p>
+      </div>
+      <div class="flex space-x-2 pt-1">
+        <button onclick="playClickSound(); closeDeleteModal();" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition active:scale-95">Cancel</button>
+        <button onclick="playClickSound(); executeDeleteSpot();" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl text-xs font-bold transition active:scale-95">Delete</button>
+      </div>
     </div>
   </div>
 
@@ -750,6 +770,7 @@
     let currentUser = null;
     let selectedEventForBooking = null;
     let generatedRecoveryOtp = null;
+    let deletingSpotId = null;
 
     let lockoutStore = JSON.parse(localStorage.getItem('tourlynk_lockout_store')) || {};
     const BASE_LOCKOUT_MS = 30 * 1000;
@@ -1105,60 +1126,174 @@
       closeOtpModal();
     } 
 
-    function openProposeModal() { document.getElementById('proposePlaceModal').classList.remove('hidden'); }
+    // OPEN PROPOSE / ADD SPOT MODAL
+    function openProposeModal() {
+      document.getElementById('propSpotId').value = '';
+      document.getElementById('propModalTitle').innerText = 'Propose / Add Tourism Spot';
+      document.getElementById('propTitle').value = '';
+      document.getElementById('propCategory').value = 'Culture';
+      document.getElementById('propLocation').value = '';
+      document.getElementById('propDate').value = '';
+      document.getElementById('propImage').value = '';
+      document.getElementById('propSlots').value = '50';
+      document.getElementById('proposePlaceModal').classList.remove('hidden');
+    }
+
+    // OPEN EDIT SPOT MODAL
+    function openEditSpotModal(spotId) {
+      const spot = eventsList.find(e => String(e.id) === String(spotId));
+      if (!spot) return;
+
+      document.getElementById('propSpotId').value = spot.id;
+      document.getElementById('propModalTitle').innerText = 'Edit Tourism Spot';
+      document.getElementById('propTitle').value = spot.title || '';
+      document.getElementById('propCategory').value = spot.category || 'Culture';
+      document.getElementById('propLocation').value = spot.location || '';
+      document.getElementById('propDate').value = spot.date || '';
+      document.getElementById('propImage').value = spot.image_url || '';
+      document.getElementById('propSlots').value = spot.available_slots || 0;
+      document.getElementById('proposePlaceModal').classList.remove('hidden');
+    }
+
     function closeProposeModal() { document.getElementById('proposePlaceModal').classList.add('hidden'); }
 
+    // SUBMIT CREATE OR EDIT PLACE
     async function submitProposedPlace(e) {
       e.preventDefault();
 
-      const isAdmin = currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin');
-      const initialStatus = isAdmin ? 'Approved' : 'Pending Admin Approval';
+      const spotId = document.getElementById('propSpotId').value.trim();
+      const title = document.getElementById('propTitle').value.trim();
+      const category = document.getElementById('propCategory').value;
+      const location = document.getElementById('propLocation').value.trim();
+      const date = document.getElementById('propDate').value;
       const customImg = document.getElementById('propImage').value.trim();
+      const slots = parseInt(document.getElementById('propSlots').value, 10);
 
-      const newPlaceId = String(Date.now());
-      const newPlace = {
-        id: newPlaceId,
-        title: document.getElementById('propTitle').value.trim(),
-        category: document.getElementById('propCategory').value,
-        location: document.getElementById('propLocation').value.trim(),
-        date: document.getElementById('propDate').value,
-        description: `Tourism destination created by ${currentUser ? currentUser.username : 'admin'}.`,
-        available_slots: parseInt(document.getElementById('propSlots').value, 10),
-        status: initialStatus,
-        badgeColor: 'bg-emerald-100 text-emerald-800',
-        image_url: customImg || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-        proposed_by: currentUser ? currentUser.username : 'admin'
-      };
+      const isAdmin = currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin');
+      const defaultImg = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';
 
-      eventsList.unshift(newPlace);
+      if (spotId) {
+        // EDIT EXISTING TOURISM SPOT
+        const idx = eventsList.findIndex(e => String(e.id) === String(spotId));
+        if (idx !== -1) {
+          eventsList[idx].title = title;
+          eventsList[idx].category = category;
+          eventsList[idx].location = location;
+          eventsList[idx].date = date;
+          eventsList[idx].image_url = customImg || defaultImg;
+          eventsList[idx].available_slots = slots;
+        }
+
+        const supabasePatchPayload = {
+          title: title,
+          category: category,
+          location: location,
+          date: date,
+          image_url: customImg || defaultImg,
+          available_slots: slots
+        };
+
+        try {
+          await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${spotId}`, {
+            method: 'PATCH',
+            headers: supabaseHeaders,
+            body: JSON.stringify(supabasePatchPayload)
+          });
+        } catch (err) {
+          console.error('Supabase Patch Error:', err);
+        }
+
+        recordAuditLog(currentUser ? currentUser.username : 'admin', 'EDIT_PLACE', `Updated tourism spot "${title}" (ID: ${spotId}).`);
+        showToast('Tourism Spot updated in Supabase!', 'success');
+      } else {
+        // CREATE NEW TOURISM SPOT
+        const initialStatus = isAdmin ? 'Approved' : 'Pending Admin Approval';
+        const newPlaceId = String(Date.now());
+        const newPlace = {
+          id: newPlaceId,
+          title: title,
+          category: category,
+          location: location,
+          date: date,
+          description: `Tourism destination created by ${currentUser ? currentUser.username : 'admin'}.`,
+          available_slots: slots,
+          status: initialStatus,
+          badgeColor: 'bg-emerald-100 text-emerald-800',
+          image_url: customImg || defaultImg,
+          proposed_by: currentUser ? currentUser.username : 'admin'
+        };
+
+        eventsList.unshift(newPlace);
+
+        const supabasePayload = {
+          id: newPlace.id,
+          title: newPlace.title,
+          category: newPlace.category,
+          location: newPlace.location,
+          date: newPlace.date,
+          description: newPlace.description,
+          available_slots: newPlace.available_slots,
+          status: newPlace.status,
+          badge_color: newPlace.badgeColor,
+          image_url: newPlace.image_url,
+          proposed_by: newPlace.proposed_by
+        };
+
+        try {
+          await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+            method: 'POST',
+            headers: supabaseHeaders,
+            body: JSON.stringify(supabasePayload)
+          });
+        } catch (err) {
+          console.error('Supabase Post Error:', err);
+        }
+
+        recordAuditLog(currentUser ? currentUser.username : 'admin', 'CREATE_PLACE', `Created tourism place "${newPlace.title}" with status: ${initialStatus}.`);
+        showToast(isAdmin ? 'New Tourism Spot Added & Live!' : 'Proposal Submitted for Admin Review!', 'success');
+      }
+
       saveEventsDB();
+      closeProposeModal();
+      renderEventsList(eventsList);
+      refreshWebAdminDashboard();
+    }
 
-      const supabasePayload = {
-        id: newPlace.id,
-        title: newPlace.title,
-        category: newPlace.category,
-        location: newPlace.location,
-        date: newPlace.date,
-        description: newPlace.description,
-        available_slots: newPlace.available_slots,
-        status: newPlace.status,
-        badge_color: newPlace.badgeColor,
-        image_url: newPlace.image_url,
-        proposed_by: newPlace.proposed_by
-      };
+    // CONFIRM DELETE TOURISM SPOT
+    function confirmDeleteSpot(spotId, spotTitle) {
+      deletingSpotId = spotId;
+      document.getElementById('deleteTargetTitle').innerText = spotTitle;
+      document.getElementById('deleteConfirmModal').classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      deletingSpotId = null;
+      document.getElementById('deleteConfirmModal').classList.add('hidden');
+    }
+
+    // EXECUTE DELETE SPOT FROM SUPABASE
+    async function executeDeleteSpot() {
+      if (!deletingSpotId) return;
+
+      const spotToDelete = eventsList.find(e => String(e.id) === String(deletingSpotId));
+      const spotTitle = spotToDelete ? spotToDelete.title : deletingSpotId;
 
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/events`, {
-          method: 'POST',
-          headers: supabaseHeaders,
-          body: JSON.stringify(supabasePayload)
+        await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${deletingSpotId}`, {
+          method: 'DELETE',
+          headers: supabaseHeaders
         });
-      } catch (err) {}
+      } catch (err) {
+        console.error('Supabase Delete Error:', err);
+      }
 
-      recordAuditLog(currentUser ? currentUser.username : 'admin', 'CREATE_PLACE', `Created tourism place "${newPlace.title}" with status: ${initialStatus}.`);
+      eventsList = eventsList.filter(e => String(e.id) !== String(deletingSpotId));
+      saveEventsDB();
 
-      closeProposeModal();
-      showToast(isAdmin ? 'New Tourism Spot Added & Live!' : 'Proposal Submitted for Admin Review!', 'success');
+      recordAuditLog(currentUser ? currentUser.username : 'admin', 'DELETE_PLACE', `Deleted tourism spot "${spotTitle}" (ID: ${deletingSpotId}).`);
+
+      closeDeleteModal();
+      showToast('Tourism Spot deleted from Supabase!', 'success');
       renderEventsList(eventsList);
       refreshWebAdminDashboard();
     }
@@ -1294,11 +1429,11 @@
       document.getElementById('statTotalLogs').innerText = loadedAuditLogs.length;
       document.getElementById('badgePendingCount').innerText = pendingSpots.length;
 
-      // Render Active Spots Table
+      // Render Active Spots Table with Actions (Edit & Delete)
       const spotsTableBody = document.getElementById('webAdminSpotsTable');
       if (spotsTableBody) {
         if (activeSpots.length === 0) {
-          spotsTableBody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500">No active tourism spots in database.</td></tr>`;
+          spotsTableBody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-500">No active tourism spots in database.</td></tr>`;
         } else {
           spotsTableBody.innerHTML = activeSpots.map(s => `
             <tr class="hover:bg-slate-800/40 transition">
@@ -1309,7 +1444,17 @@
               <td class="py-3 px-4"><span class="bg-teal-500/10 text-teal-300 border border-teal-500/20 px-2 py-0.5 rounded-full text-[10px] font-bold">${s.category || 'General'}</span></td>
               <td class="py-3 px-4 text-slate-400">${s.location}</td>
               <td class="py-3 px-4 font-mono font-bold text-amber-400">${s.available_slots} Slots</td>
-              <td class="py-3 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold">Approved</span></td>
+              <td class="py-3 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold">${s.status || 'Approved'}</span></td>
+              <td class="py-3 px-4 text-center">
+                <div class="flex items-center justify-center gap-2">
+                  <button onclick="playClickSound(); openEditSpotModal('${s.id}')" class="px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Edit Spot">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                  </button>
+                  <button onclick="playClickSound(); confirmDeleteSpot('${s.id}', '${(s.title || '').replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Delete Spot">
+                    <i class="fa-solid fa-trash"></i> Delete
+                  </button>
+                </div>
+              </td>
             </tr>
           `).join('');
         }
@@ -1639,7 +1784,7 @@
         } else {
           webLogsTable.innerHTML = logs.map(l => {
             let badgeColor = 'bg-sky-500/10 text-sky-400 border-sky-500/20';
-            if (l.action.includes('DECLINED') || l.action.includes('REJECTED') || l.action.includes('LOCKOUT') || l.action === 'FAILED_LOGIN') badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+            if (l.action.includes('DECLINED') || l.action.includes('REJECTED') || l.action.includes('LOCKOUT') || l.action === 'FAILED_LOGIN' || l.action.includes('DELETE')) badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
             if (l.action.includes('APPROVED') || l.action === 'LOGIN_SUCCESS') badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
 
             return `

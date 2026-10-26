@@ -81,7 +81,6 @@
 
     <!-- AUTHENTICATION MODULE -->
     <section id="authModule" class="flex-1 flex flex-col justify-between p-6 overflow-y-auto z-30 bg-gradient-to-b from-slate-50 via-teal-50/30 to-slate-100">
-      
       <div class="text-center pt-3 pb-1">
         <div class="w-20 h-20 bg-gradient-to-tr from-brand-700 via-teal-500 to-emerald-400 text-white rounded-3xl flex items-center justify-center mx-auto mb-3 shadow-xl shadow-teal-500/30 transform rotate-3 hover:rotate-0 transition duration-300">
           <i class="fa-solid fa-compass text-3xl"></i>
@@ -91,7 +90,6 @@
       </div>
 
       <div class="w-full my-auto py-2">
-        
         <!-- LOGIN FORM -->
         <form id="loginForm" class="space-y-3.5 animate-app-slide" onsubmit="handleLoginSubmit(event)">
           <div class="border-b border-slate-200/80 pb-2">
@@ -207,10 +205,9 @@
             </p>
           </div>
         </form>
-
       </div>
 
-      <!-- Quick Demo Login -->
+      <!-- Quick Demo Login Buttons -->
       <div class="bg-white/90 backdrop-blur-md rounded-2xl p-3 border border-slate-200/90 shadow-md space-y-1.5">
         <div class="font-bold text-slate-700 flex items-center justify-between">
           <span class="flex items-center gap-1.5 text-xs"><i class="fa-solid fa-bolt text-amber-500"></i> Quick Demo Login</span>
@@ -230,9 +227,8 @@
       </div>
     </section>
 
-    <!-- MOBILE MAIN DASHBOARD MODULE (For Tourist & Staff) -->
+    <!-- MOBILE MAIN DASHBOARD MODULE -->
     <div id="mainAppModule" class="hidden flex-1 flex flex-col justify-between overflow-hidden bg-slate-100 relative">
-      
       <header class="glass-header text-white px-5 py-3.5 shadow-lg flex justify-between items-center z-20 shrink-0">
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 bg-white/10 border border-white/20 rounded-xl flex items-center justify-center font-bold text-teal-300 text-base shadow-sm">
@@ -244,13 +240,20 @@
           </div>
         </div>
 
-        <button onclick="playClickSound(); promptLogoutDialog();" class="w-8 h-8 rounded-full bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-red-200 flex items-center justify-center text-xs transition active:scale-95 shadow-sm" title="Logout">
-          <i class="fa-solid fa-power-off"></i>
-        </button>
+        <div class="flex items-center gap-2">
+          <!-- Announcements Bell Icon -->
+          <button onclick="playClickSound(); openAnnouncementsModal();" class="relative w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-teal-200 flex items-center justify-center text-xs transition active:scale-95 shadow-sm" title="Announcements & Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span id="notifBadge" class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border border-white">0</span>
+          </button>
+
+          <button onclick="playClickSound(); promptLogoutDialog();" class="w-8 h-8 rounded-full bg-red-500/20 hover:bg-red-500/30 border border-red-400/30 text-red-200 flex items-center justify-center text-xs transition active:scale-95 shadow-sm" title="Logout">
+            <i class="fa-solid fa-power-off"></i>
+          </button>
+        </div>
       </header>
 
       <main class="flex-1 overflow-y-auto p-4 space-y-4 relative no-scrollbar">
-        
         <!-- MOBILE TAB 1: EVENTS FEED -->
         <section id="tabEvents" class="space-y-4 animate-app-slide">
           <div class="bg-gradient-to-br from-brand-900 via-brand-800 to-teal-700 rounded-3xl p-4.5 text-white shadow-xl relative overflow-hidden border border-brand-700/50">
@@ -276,33 +279,59 @@
           <div id="eventsContainer" class="space-y-3"></div>
         </section>
 
-        <!-- MOBILE TAB 2: MY PASSES (VISITOR ONLY) -->
-        <section id="tabBookings" class="hidden space-y-3 animate-app-slide">
-          <h3 class="text-xs font-extrabold text-slate-800">My Tourist Ticket Passes</h3>
-          <div id="userBookingsList" class="space-y-3"></div>
+        <!-- MOBILE TAB 2: MY PASSES & SAVED SPOTS (VISITOR ONLY) -->
+        <section id="tabBookings" class="hidden space-y-4 animate-app-slide">
+          <div class="space-y-2">
+            <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-bookmark text-brand-600"></i> Saved Tourism Spots
+            </h3>
+            <div id="userSavedSpotsList" class="space-y-3"></div>
+          </div>
+
+          <div class="space-y-2 pt-2 border-t border-slate-200">
+            <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-ticket text-brand-600"></i> My Tourist Ticket Passes
+            </h3>
+            <div id="userBookingsList" class="space-y-3"></div>
+          </div>
         </section>
 
         <!-- MOBILE TAB 3: ORGANIZER STAFF CONSOLE -->
         <section id="tabOrganizerReview" class="hidden space-y-4 animate-app-slide">
-          <div class="bg-white rounded-3xl p-4 border border-slate-200/90 shadow-sm space-y-2">
+          <div class="bg-white rounded-3xl p-4 border border-slate-200/90 shadow-sm space-y-3">
             <div class="flex justify-between items-center">
               <div>
                 <h3 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                  <i class="fa-solid fa-location-dot text-brand-600"></i> Tourism Places & Events
+                  <i class="fa-solid fa-location-dot text-brand-600"></i> Tourism Places & Updates
                 </h3>
-                <p class="text-[10px] text-slate-500 font-medium">Propose new spots to Admin & manage ticket inventory.</p>
+                <p class="text-[10px] text-slate-500 font-medium">Propose new spots to Admin & broadcast notices.</p>
               </div>
-              <button onclick="playClickSound(); openProposeModal();" class="bg-brand-600 hover:bg-brand-700 text-white font-bold px-3 py-1.5 rounded-2xl text-[10px] transition active:scale-95 shadow-sm">
-                + Propose Place
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
+              <button onclick="playClickSound(); openProposeModal();" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-2 rounded-2xl text-[10px] transition active:scale-95 shadow-sm flex items-center justify-center gap-1">
+                <i class="fa-solid fa-plus"></i> Propose Place
+              </button>
+              <button onclick="playClickSound(); openCreateAnnouncementModal();" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-2xl text-[10px] transition active:scale-95 shadow-sm flex items-center justify-center gap-1">
+                <i class="fa-solid fa-bullhorn"></i> Post Notice
               </button>
             </div>
           </div>
 
+          <!-- Ticket Requests -->
           <div class="space-y-2">
             <h4 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
               <i class="fa-solid fa-user-check text-brand-600"></i> User Ticket Requests (Staff Approval)
             </h4>
             <div id="organizerApplicationsContainer" class="space-y-3 text-[11px]"></div>
+          </div>
+
+          <!-- Feedbacks & Inquiries -->
+          <div class="space-y-2 pt-2 border-t border-slate-200">
+            <h4 class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-comments text-brand-600"></i> Visitor Feedbacks & Inquiries
+            </h4>
+            <div id="organizerFeedbacksContainer" class="space-y-3 text-[11px]"></div>
           </div>
         </section>
 
@@ -318,7 +347,6 @@
           </div>
           <button onclick="playClickSound(); promptLogoutDialog();" class="w-full bg-red-50 hover:bg-red-100 text-red-700 font-bold py-3 rounded-2xl text-xs transition active:scale-95">Sign Out</button>
         </section>
-
       </main>
 
       <!-- BOTTOM MOBILE NAVIGATION BAR -->
@@ -343,7 +371,6 @@
           <span>Profile</span>
         </button>
       </nav>
-
     </div>
   </div>
 
@@ -352,11 +379,8 @@
   <!-- 2. DESKTOP WEB ADMIN DASHBOARD (ADMIN ONLY) -->
   <!-- ========================================== -->
   <div id="webAdminDashboard" class="hidden w-full max-w-7xl mx-auto min-h-screen md:min-h-[90vh] bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl flex overflow-hidden animate-app-slide">
-    
-    <!-- LEFT SIDEBAR NAV -->
     <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between p-5 text-slate-300">
       <div class="space-y-6">
-        <!-- Logo Header -->
         <div class="flex items-center gap-3 px-2">
           <div class="w-10 h-10 bg-gradient-to-tr from-brand-600 to-teal-400 text-white rounded-2xl flex items-center justify-center text-xl font-black shadow-lg shadow-teal-500/20">
             <i class="fa-solid fa-compass"></i>
@@ -367,7 +391,6 @@
           </div>
         </div>
 
-        <!-- Navigation Links -->
         <nav class="space-y-1.5 pt-2">
           <button onclick="switchAdminSection('secOverview')" id="adminNav-secOverview" class="admin-nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold text-white bg-brand-600/20 border border-brand-500/30 transition">
             <i class="fa-solid fa-chart-pie text-brand-400 text-sm"></i>
@@ -387,7 +410,6 @@
         </nav>
       </div>
 
-      <!-- Admin Profile & Sign Out Footer -->
       <div class="pt-4 border-t border-slate-800/80 space-y-3">
         <div class="flex items-center gap-3 px-2">
           <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-rose-600 to-amber-500 text-white font-extrabold flex items-center justify-center text-sm shadow-md">
@@ -406,10 +428,7 @@
       </div>
     </aside>
 
-    <!-- RIGHT MAIN CONTENT DASHBOARD -->
     <main class="flex-1 flex flex-col overflow-hidden bg-slate-900 text-slate-100">
-      
-      <!-- Top Navigation Header -->
       <header class="h-16 border-b border-slate-800 px-8 flex justify-between items-center bg-slate-950/40 backdrop-blur-md shrink-0">
         <div class="flex items-center gap-3">
           <h2 class="text-sm font-extrabold text-slate-200 uppercase tracking-wider" id="adminHeaderTitle">Dashboard Overview</h2>
@@ -424,10 +443,7 @@
         </div>
       </header>
 
-      <!-- Scrollable Admin Content Body -->
       <div class="flex-1 overflow-y-auto p-8 space-y-8">
-        
-        <!-- ADMIN STATS WIDGETS -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="bg-slate-800/60 border border-slate-700/60 p-5 rounded-2xl flex items-center gap-4 shadow-sm">
             <div class="w-12 h-12 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-2xl flex items-center justify-center text-xl shrink-0">
@@ -470,50 +486,35 @@
           </div>
         </div>
 
-        <!-- ADMIN SECTION 1: OVERVIEW & SPOTS TABLE -->
         <section id="secOverview" class="admin-section space-y-4">
-          <div class="flex justify-between items-center">
-            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
-              <i class="fa-solid fa-layer-group text-brand-400"></i> Active Tourism Spots Catalog
-            </h3>
-          </div>
-
+          <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-brand-400"></i> Active Tourism Spots Catalog
+          </h3>
           <div class="bg-slate-800/40 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs text-slate-300">
-                <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
-                  <tr>
-                    <th class="py-3.5 px-4 font-bold">Spot Details</th>
-                    <th class="py-3.5 px-4 font-bold">Category</th>
-                    <th class="py-3.5 px-4 font-bold">Location</th>
-                    <th class="py-3.5 px-4 font-bold">Available Slots</th>
-                    <th class="py-3.5 px-4 font-bold">Status</th>
-                    <th class="py-3.5 px-4 font-bold text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="webAdminSpotsTable" class="divide-y divide-slate-800/60 font-medium">
-                  <!-- Dynamic rows -->
-                </tbody>
-              </table>
-            </div>
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                <tr>
+                  <th class="py-3.5 px-4 font-bold">Spot Details</th>
+                  <th class="py-3.5 px-4 font-bold">Category</th>
+                  <th class="py-3.5 px-4 font-bold">Location</th>
+                  <th class="py-3.5 px-4 font-bold">Available Slots</th>
+                  <th class="py-3.5 px-4 font-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody id="webAdminSpotsTable" class="divide-y divide-slate-800/60 font-medium"></tbody>
+            </table>
           </div>
         </section>
 
-        <!-- ADMIN SECTION 2: PROPOSED PLACES APPROVAL -->
         <section id="secProposed" class="admin-section hidden space-y-4">
           <div class="flex justify-between items-center">
             <h3 class="text-base font-extrabold text-white flex items-center gap-2">
               <i class="fa-solid fa-map-location-dot text-amber-400"></i> Proposed Places Pending Admin Review
             </h3>
-            <p class="text-xs text-slate-400 font-medium">Review and approve spots submitted by Event Organizers / Staff.</p>
           </div>
-
-          <div id="webAdminProposedGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Dynamic proposed place cards -->
-          </div>
+          <div id="webAdminProposedGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </section>
 
-        <!-- ADMIN SECTION 3: SYSTEM AUDIT LOG TRAIL -->
         <section id="secLogs" class="admin-section hidden space-y-4">
           <div class="flex justify-between items-center">
             <h3 class="text-base font-extrabold text-white flex items-center gap-2">
@@ -521,54 +522,115 @@
             </h3>
             <button onclick="playClickSound(); fetchAuditLogs();" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-700 transition">Refresh Feed</button>
           </div>
-
           <div class="bg-slate-800/40 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs text-slate-300">
-                <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
-                  <tr>
-                    <th class="py-3.5 px-4 font-bold">Action</th>
-                    <th class="py-3.5 px-4 font-bold">Username</th>
-                    <th class="py-3.5 px-4 font-bold">Details</th>
-                    <th class="py-3.5 px-4 font-bold">Timestamp</th>
-                  </tr>
-                </thead>
-                <tbody id="webAdminLogsTable" class="divide-y divide-slate-800/60 font-medium">
-                  <!-- Dynamic log rows -->
-                </tbody>
-              </table>
-            </div>
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950/60 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                <tr>
+                  <th class="py-3.5 px-4 font-bold">Action</th>
+                  <th class="py-3.5 px-4 font-bold">Username</th>
+                  <th class="py-3.5 px-4 font-bold">Details</th>
+                  <th class="py-3.5 px-4 font-bold">Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="webAdminLogsTable" class="divide-y divide-slate-800/60 font-medium"></tbody>
+            </table>
           </div>
         </section>
-
       </div>
     </main>
   </div>
 
 
   <!-- ========================================== -->
-  <!-- 3. MODALS (SHARED ACROSS BOTH VIEWS) -->
+  <!-- 3. MODALS -->
   <!-- ========================================== -->
 
-  <!-- MODAL: PROPOSE / ADD / EDIT TOURISM SPOT -->
+  <!-- MODAL: ANNOUNCEMENTS & NOTIFICATIONS -->
+  <div id="announcementsModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-modal-pop text-slate-800 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3 shrink-0">
+        <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-bullhorn text-brand-600"></i> Tourism Announcements
+        </h3>
+        <button onclick="playClickSound(); closeAnnouncementsModal();" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="announcementsListContainer" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: STAFF POST ANNOUNCEMENT -->
+  <div id="createAnnouncementModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-modal-pop text-slate-800">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-bullhorn text-teal-600"></i> Broadcast Announcement
+        </h3>
+        <button onclick="playClickSound(); closeCreateAnnouncementModal();" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form onsubmit="handlePostAnnouncement(event)" class="space-y-3 text-left">
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Title / Subject</label>
+          <input type="text" id="ancTitle" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="e.g. Schedule Change for Buga-Buga Hills">
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Announcement Content</label>
+          <textarea id="ancContent" required rows="3" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Write message to visitors..."></textarea>
+        </div>
+
+        <button type="submit" onclick="playClickSound()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 shadow-md shadow-teal-600/30">
+          Broadcast Notice
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: STAFF REPLY TO VISITOR INQUIRY -->
+  <div id="replyInquiryModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-modal-pop text-slate-800">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-reply text-brand-600"></i> Respond to Visitor
+        </h3>
+        <button onclick="playClickSound(); closeReplyInquiryModal();" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 space-y-1">
+        <p class="text-[10px] text-slate-400 font-bold" id="replyTargetVisitor">Visitor Inquiry</p>
+        <p class="text-xs text-slate-700 italic font-medium" id="replyTargetComment">"Comment content"</p>
+      </div>
+
+      <form onsubmit="handleStaffSubmitReply(event)" class="space-y-3 text-left">
+        <div>
+          <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Staff Response Message</label>
+          <textarea id="staffReplyInput" required rows="3" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Write response..."></textarea>
+        </div>
+
+        <button type="submit" onclick="playClickSound()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 shadow-md shadow-brand-600/30">
+          Send Official Response
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: PROPOSE / ADD NEW PLACE -->
   <div id="proposePlaceModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-modal-pop text-slate-800">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 id="propModalTitle" class="text-sm font-extrabold text-slate-900">Propose / Add Tourism Spot</h3>
+        <h3 class="text-sm font-extrabold text-slate-900">Propose / Add Tourism Spot</h3>
         <button onclick="playClickSound(); closeProposeModal();" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <form onsubmit="submitProposedPlace(event)" class="space-y-3 text-left">
-        <input type="hidden" id="propSpotId">
-
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Title / Spot Name</label>
-          <input type="text" id="propTitle" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="e.g. Alta Vista Golf & Country Club">
+          <input type="text" id="propTitle" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="e.g. Alta Vista Golf & Country Club">
         </div>
 
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Category</label>
-          <select id="propCategory" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <select id="propCategory" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold">
             <option value="Culture">Culture</option>
             <option value="Food & Crafts">Food & Crafts</option>
             <option value="Heritage">Heritage</option>
@@ -578,45 +640,28 @@
 
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Location Address</label>
-          <input type="text" id="propLocation" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Location address">
+          <input type="text" id="propLocation" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="Location address">
         </div>
 
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Event Date</label>
-          <input type="date" id="propDate" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <input type="date" id="propDate" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold">
         </div>
 
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Image URL</label>
-          <input type="url" id="propImage" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="https://images.unsplash.com/...">
+          <input type="url" id="propImage" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold" placeholder="https://images.unsplash.com/...">
         </div>
 
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-0.5">Initial Available Slots</label>
-          <input type="number" id="propSlots" min="1" value="50" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <input type="number" id="propSlots" min="1" value="50" required class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold">
         </div>
 
-        <button type="submit" onclick="playClickSound()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 shadow-md shadow-brand-600/30 mt-2">
-          Save Spot to Supabase
+        <button type="submit" onclick="playClickSound()" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 shadow-md shadow-brand-600/30">
+          Save Spot
         </button>
       </form>
-    </div>
-  </div>
-
-  <!-- MODAL: DELETE CONFIRMATION -->
-  <div id="deleteConfirmModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl space-y-4 animate-modal-pop text-slate-800">
-      <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
-        <i class="fa-solid fa-trash-can"></i>
-      </div>
-      <div>
-        <h3 class="text-base font-extrabold text-slate-900">Delete Tourism Spot?</h3>
-        <p class="text-xs text-slate-500 font-medium mt-1">Are you sure you want to delete <strong id="deleteTargetTitle" class="text-slate-800"></strong>? This will permanently remove it from Supabase.</p>
-      </div>
-      <div class="flex space-x-2 pt-1">
-        <button onclick="playClickSound(); closeDeleteModal();" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition active:scale-95">Cancel</button>
-        <button onclick="playClickSound(); executeDeleteSpot();" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl text-xs font-bold transition active:scale-95">Delete</button>
-      </div>
     </div>
   </div>
 
@@ -647,16 +692,17 @@
     </div>
   </div>
 
-  <!-- MODAL: EVENT DETAILS (MOBILE ONLY) -->
+  <!-- MODAL: EVENT DETAILS & FEEDBACK FORM -->
   <div id="eventDetailModal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-end md:items-center justify-center p-0 md:p-4 animate-app-slide">
-    <div class="bg-white w-full max-w-md rounded-t-[32px] md:rounded-[32px] max-h-[90vh] overflow-y-auto p-6 space-y-4 shadow-2xl relative animate-modal-pop text-slate-800">
-      
-      <!-- PLACE BANNER IMAGE -->
-      <div class="w-full h-36 rounded-2xl overflow-hidden bg-slate-100 mb-2 shadow-inner">
+    <div class="bg-white w-full max-w-md rounded-t-[32px] md:rounded-[32px] max-h-[90vh] overflow-y-auto p-6 space-y-4 shadow-2xl relative animate-modal-pop text-slate-800 no-scrollbar">
+      <div class="w-full h-36 rounded-2xl overflow-hidden bg-slate-100 mb-2 shadow-inner relative">
         <img id="modalEventImage" src="" alt="Spot Photo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';">
+        <button id="modalSaveBookmarkBtn" onclick="playClickSound(); toggleSaveCurrentEvent();" class="absolute top-3 left-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-600 flex items-center justify-center text-sm shadow-md transition active:scale-95" title="Save Event">
+          <i class="fa-regular fa-bookmark"></i>
+        </button>
       </div>
 
-      <button onclick="playClickSound(); closeEventModal();" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 text-xs transition active:scale-95">
+      <button onclick="playClickSound(); closeEventModal();" class="absolute top-5 right-5 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center text-slate-600 text-xs transition active:scale-95 z-10">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
@@ -684,6 +730,7 @@
         <p id="modalEventDescription" class="text-xs text-slate-600 leading-relaxed font-medium">Detailed event description.</p>
       </div>
 
+      <!-- VISITOR TICKET FORM -->
       <div id="modalVisitorActionForm" class="border-t border-slate-100 pt-3 space-y-3">
         <div>
           <label class="block text-[10px] font-extrabold text-slate-600 uppercase mb-1">Select Number of Tickets</label>
@@ -699,6 +746,33 @@
         </button>
       </div>
 
+      <!-- VISITOR RATINGS & REVIEWS -->
+      <div id="modalFeedbackSection" class="border-t border-slate-100 pt-3 space-y-3">
+        <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center justify-between">
+          <span>Visitor Ratings & Reviews</span>
+          <span id="eventAvgRatingBadge" class="text-[10px] text-amber-600 font-bold"><i class="fa-solid fa-star"></i> 5.0</span>
+        </h4>
+
+        <div id="eventFeedbacksList" class="space-y-2 text-[11px] max-h-36 overflow-y-auto pr-1"></div>
+
+        <form id="visitorFeedbackForm" onsubmit="handleVisitorSubmitFeedback(event)" class="space-y-2 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
+          <label class="block text-[10px] font-extrabold text-slate-700 uppercase">Leave your Rating & Feedback</label>
+          <div class="flex items-center gap-1 text-amber-400 text-sm" id="starRatingSelector">
+            <i class="fa-solid fa-star cursor-pointer" onclick="setSelectRating(1)"></i>
+            <i class="fa-solid fa-star cursor-pointer" onclick="setSelectRating(2)"></i>
+            <i class="fa-solid fa-star cursor-pointer" onclick="setSelectRating(3)"></i>
+            <i class="fa-solid fa-star cursor-pointer" onclick="setSelectRating(4)"></i>
+            <i class="fa-solid fa-star cursor-pointer" onclick="setSelectRating(5)"></i>
+            <input type="hidden" id="selectedStarValue" value="5">
+          </div>
+          <textarea id="visitorCommentInput" required rows="2" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none" placeholder="Write feedback or inquiry..."></textarea>
+          <button type="submit" onclick="playClickSound()" class="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl text-xs transition active:scale-95">
+            Submit Review
+          </button>
+        </form>
+      </div>
+
+      <!-- ORGANIZER STOCK FORM -->
       <div id="modalOrganizerStockForm" class="hidden border-t border-slate-100 pt-3 space-y-2">
         <label class="block text-[10px] font-extrabold text-slate-600 uppercase">Add More Ticket Inventory</label>
         <div class="flex gap-2">
@@ -728,35 +802,28 @@
 
 
   <!-- ========================================== -->
-  <!-- 4. JAVASCRIPT LOGIC & SUPABASE INTEGRATION -->
+  <!-- 4. JAVASCRIPT LOGIC & FULL SUPABASE SYNC -->
   <!-- ========================================== -->
   <script>
-    // WEB AUDIO CLICK SYNTHESIZER
     let audioCtx = null;
-
     function playClickSound() {
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-
         osc.type = 'sine';
         osc.frequency.setValueAtTime(800, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.04);
-
         gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
-
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-
         osc.start();
         osc.stop(audioCtx.currentTime + 0.04);
       } catch (e) {}
     }
 
-    // SUPABASE API CONFIGURATION
     const SUPABASE_URL = 'https://jgvwpnqvgkhrvykrmdtm.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpndndwbnF2Z2tocnZ5a3JtZHRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3NTExNTQsImV4cCI6MjEwNzMyNzE1NH0.kzspQNRrjQppyf2PwOzJvTeGA-LbxIwx17igwXht4ro';
 
@@ -770,89 +837,25 @@
     let currentUser = null;
     let selectedEventForBooking = null;
     let generatedRecoveryOtp = null;
-    let deletingSpotId = null;
+    let selectedFeedbackForReply = null;
 
     let lockoutStore = JSON.parse(localStorage.getItem('tourlynk_lockout_store')) || {};
     const BASE_LOCKOUT_MS = 30 * 1000;
     const MAX_FAILED_ATTEMPTS = 3;
 
-    // DEFAULT SPOTS DATA
-    const defaultVillabaSpots = [
-      {
-        id: "1",
-        title: "Buga-Buga Hills",
-        category: "Heritage",
-        description: "WWII historical stronghold & rocky hill fortress with limestone rock walls.",
-        location: "Brgy. Buga-Buga, Villaba, Leyte",
-        date: "2026-10-20",
-        available_slots: 50,
-        status: "Approved",
-        badgeColor: "bg-emerald-100 text-emerald-800",
-        image_url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "2",
-        title: "Busay Falls",
-        category: "Eco Tourism",
-        description: "5-tier natural cascading waterfalls surrounded by lush greenery.",
-        location: "Villaba, Leyte",
-        date: "2026-11-05",
-        available_slots: 30,
-        status: "Approved",
-        badgeColor: "bg-teal-100 text-teal-800",
-        image_url: "https://images.unsplash.com/photo-1432405972618-c30b0225b20c?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "3",
-        title: "Sy Breeze Nature Resort",
-        category: "Eco Tourism",
-        description: "Peaceful mangrove boardwalk & sunset view resort in Silad.",
-        location: "Brgy. Silad, Villaba, Leyte",
-        date: "2026-11-10",
-        available_slots: 40,
-        status: "Approved",
-        badgeColor: "bg-purple-100 text-purple-800",
-        image_url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "4",
-        title: "Bondari Peak",
-        category: "Culture",
-        description: "Known as 'Little Batanes', offering panoramic mountain and sea views.",
-        location: "Brgy. Abijao, Villaba, Leyte",
-        date: "2026-12-01",
-        available_slots: 25,
-        status: "Approved",
-        badgeColor: "bg-amber-100 text-amber-800",
-        image_url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "5",
-        title: "Abijao Beach Coastline",
-        category: "Food & Crafts",
-        description: "Clear waters and pebble beach resorts for relaxing weekend getaways.",
-        location: "Brgy. Abijao, Villaba, Leyte",
-        date: "2026-12-15",
-        available_slots: 60,
-        status: "Approved",
-        badgeColor: "bg-sky-100 text-sky-800",
-        image_url: "https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=800&q=80"
-      }
-    ];
-
-    let eventsList = JSON.parse(localStorage.getItem('tourlynk_events_db')) || defaultVillabaSpots;
-
-    let sharedApplicationsStore = JSON.parse(localStorage.getItem('tourlynk_applications_store')) || [
-      { id: 101, event_id: '1', applicant: 'tourlynk_user', applicantName: 'Juan Dela Cruz', title: 'Buga-Buga Hills', date: '2026-10-20', location: 'Brgy. Buga-Buga, Villaba, Leyte', tickets: 1, status: 'Pending Staff Review' }
-    ];
-
+    let eventsList = JSON.parse(localStorage.getItem('tourlynk_events_db')) || [];
+    let savedEventsIds = JSON.parse(localStorage.getItem('tourlynk_saved_events')) || [];
+    let announcementsStore = JSON.parse(localStorage.getItem('tourlynk_announcements_store')) || [];
+    let feedbacksStore = JSON.parse(localStorage.getItem('tourlynk_feedbacks_store')) || [];
+    let sharedApplicationsStore = JSON.parse(localStorage.getItem('tourlynk_applications_store')) || [];
     let loadedAuditLogs = [];
 
     document.addEventListener('DOMContentLoaded', () => {
       startClock();
-      saveEventsDB();
       fetchSupabaseEvents();
       fetchSupabaseApplications();
+      fetchSupabaseAnnouncements();
+      fetchSupabaseFeedbacks();
       fetchAuditLogs();
     });
 
@@ -897,7 +900,6 @@
     }
 
     function dismissToast() { document.getElementById('toastAlert').classList.add('hidden'); }
-    
     function switchAuthTab(mode) {
       document.getElementById('loginForm').classList.toggle('hidden', mode === 'register');
       document.getElementById('registerForm').classList.toggle('hidden', mode !== 'register');
@@ -949,6 +951,7 @@
       form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
     }
 
+    // SUPABASE REST SYNC FUNCTIONS
     async function fetchSupabaseEvents() {
       try {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/events?select=*`, { headers: supabaseHeaders });
@@ -960,10 +963,10 @@
               id: String(item.id),
               badgeColor: item.badge_color || item.badgeColor || 'bg-emerald-100 text-emerald-800'
             }));
+            saveEventsDB();
           }
         }
       } catch (err) {}
-      saveEventsDB();
       renderEventsList(eventsList);
       refreshWebAdminDashboard();
     }
@@ -984,6 +987,34 @@
         }
       } catch (err) {}
       refreshWebAdminDashboard();
+    }
+
+    async function fetchSupabaseAnnouncements() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/announcements?select=*&order=created_at.desc`, { headers: supabaseHeaders });
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            announcementsStore = data;
+            localStorage.setItem('tourlynk_announcements_store', JSON.stringify(announcementsStore));
+          }
+        }
+      } catch (err) {}
+      updateNotifBadge();
+    }
+
+    async function fetchSupabaseFeedbacks() {
+      try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/feedbacks?select=*&order=created_at.desc`, { headers: supabaseHeaders });
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            feedbacksStore = data;
+            localStorage.setItem('tourlynk_feedbacks_store', JSON.stringify(feedbacksStore));
+          }
+        }
+      } catch (err) {}
+      renderOrganizerFeedbacks();
     }
 
     async function handleLoginSubmit(e) {
@@ -1051,7 +1082,6 @@
       } else {
         lockoutStore[username] = lockData;
         localStorage.setItem('tourlynk_lockout_store', JSON.stringify(lockoutStore));
-
         const remaining = MAX_FAILED_ATTEMPTS - lockData.attempts;
         showToast(`Incorrect credentials. ${remaining} attempt(s) remaining.`, 'error');
         recordAuditLog(username, 'FAILED_LOGIN', `Failed login attempt ${lockData.attempts}/3.`);
@@ -1126,174 +1156,320 @@
       closeOtpModal();
     } 
 
-    // OPEN PROPOSE / ADD SPOT MODAL
-    function openProposeModal() {
-      document.getElementById('propSpotId').value = '';
-      document.getElementById('propModalTitle').innerText = 'Propose / Add Tourism Spot';
-      document.getElementById('propTitle').value = '';
-      document.getElementById('propCategory').value = 'Culture';
-      document.getElementById('propLocation').value = '';
-      document.getElementById('propDate').value = '';
-      document.getElementById('propImage').value = '';
-      document.getElementById('propSlots').value = '50';
-      document.getElementById('proposePlaceModal').classList.remove('hidden');
-    }
-
-    // OPEN EDIT SPOT MODAL
-    function openEditSpotModal(spotId) {
-      const spot = eventsList.find(e => String(e.id) === String(spotId));
-      if (!spot) return;
-
-      document.getElementById('propSpotId').value = spot.id;
-      document.getElementById('propModalTitle').innerText = 'Edit Tourism Spot';
-      document.getElementById('propTitle').value = spot.title || '';
-      document.getElementById('propCategory').value = spot.category || 'Culture';
-      document.getElementById('propLocation').value = spot.location || '';
-      document.getElementById('propDate').value = spot.date || '';
-      document.getElementById('propImage').value = spot.image_url || '';
-      document.getElementById('propSlots').value = spot.available_slots || 0;
-      document.getElementById('proposePlaceModal').classList.remove('hidden');
-    }
-
+    function openProposeModal() { document.getElementById('proposePlaceModal').classList.remove('hidden'); }
     function closeProposeModal() { document.getElementById('proposePlaceModal').classList.add('hidden'); }
 
-    // SUBMIT CREATE OR EDIT PLACE
+    // ANNOUNCEMENTS
+    function updateNotifBadge() {
+      const badge = document.getElementById('notifBadge');
+      if (badge) badge.innerText = announcementsStore.length;
+    }
+
+    function openAnnouncementsModal() {
+      renderAnnouncementsList();
+      document.getElementById('announcementsModal').classList.remove('hidden');
+    }
+    function closeAnnouncementsModal() { document.getElementById('announcementsModal').classList.add('hidden'); }
+
+    function renderAnnouncementsList() {
+      const container = document.getElementById('announcementsListContainer');
+      if (!container) return;
+
+      if (announcementsStore.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6 font-semibold">No announcements posted.</p>`;
+        return;
+      }
+
+      container.innerHTML = announcementsStore.map(a => `
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 space-y-1">
+          <div class="flex justify-between items-center">
+            <h4 class="text-xs font-extrabold text-slate-900">${a.title}</h4>
+            <span class="text-[9px] text-slate-400 font-mono">${a.date}</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed font-medium">${a.content}</p>
+          <span class="inline-block text-[9px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-100">By @${a.posted_by}</span>
+        </div>
+      `).join('');
+    }
+
+    function openCreateAnnouncementModal() { document.getElementById('createAnnouncementModal').classList.remove('hidden'); }
+    function closeCreateAnnouncementModal() { document.getElementById('createAnnouncementModal').classList.add('hidden'); }
+
+    async function handlePostAnnouncement(e) {
+      e.preventDefault();
+      if (!currentUser || currentUser.role !== 'organizer') {
+        showToast('Only Tourism Staff can post announcements.', 'error');
+        return;
+      }
+
+      const newAnc = {
+        id: Date.now(),
+        title: document.getElementById('ancTitle').value.trim(),
+        content: document.getElementById('ancContent').value.trim(),
+        posted_by: currentUser.username,
+        date: new Date().toLocaleDateString()
+      };
+
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/announcements`, {
+          method: 'POST',
+          headers: supabaseHeaders,
+          body: JSON.stringify(newAnc)
+        });
+      } catch (err) {}
+
+      announcementsStore.unshift(newAnc);
+      localStorage.setItem('tourlynk_announcements_store', JSON.stringify(announcementsStore));
+      updateNotifBadge();
+
+      recordAuditLog(currentUser.username, 'POST_ANNOUNCEMENT', `Broadcast notice: "${newAnc.title}"`);
+      closeCreateAnnouncementModal();
+      showToast('Announcement Broadcasted to Visitors!', 'success');
+    }
+
+    // SAVED SPOTS
+    function toggleSaveCurrentEvent() {
+      if (!selectedEventForBooking) return;
+      const evId = String(selectedEventForBooking.id);
+
+      const idx = savedEventsIds.indexOf(evId);
+      if (idx > -1) {
+        savedEventsIds.splice(idx, 1);
+        showToast('Removed from saved spots.', 'info');
+      } else {
+        savedEventsIds.push(evId);
+        showToast('Saved to your bookmarked spots!', 'success');
+      }
+
+      localStorage.setItem('tourlynk_saved_events', JSON.stringify(savedEventsIds));
+      updateBookmarkIconState(evId);
+      renderUserSavedSpots();
+    }
+
+    function updateBookmarkIconState(evId) {
+      const btn = document.getElementById('modalSaveBookmarkBtn');
+      if (!btn) return;
+      const isSaved = savedEventsIds.includes(String(evId));
+      btn.innerHTML = isSaved ? '<i class="fa-solid fa-bookmark text-brand-600"></i>' : '<i class="fa-regular fa-bookmark"></i>';
+    }
+
+    function renderUserSavedSpots() {
+      const container = document.getElementById('userSavedSpotsList');
+      if (!container) return;
+
+      const savedSpots = eventsList.filter(e => savedEventsIds.includes(String(e.id)));
+
+      if (savedSpots.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 bg-white rounded-2xl border border-slate-200/80 font-semibold">No saved tourism spots yet.</p>`;
+        return;
+      }
+
+      container.innerHTML = savedSpots.map(ev => `
+        <div onclick="playClickSound(); openEventModal('${ev.id}');" class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-sm flex gap-3 items-center cursor-pointer">
+          <img src="${ev.image_url}" class="w-12 h-12 rounded-xl object-cover shrink-0">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-extrabold text-slate-800 truncate">${ev.title}</h4>
+            <p class="text-[10px] text-slate-500 font-medium truncate">${ev.location}</p>
+          </div>
+          <span class="text-xs text-brand-600 font-bold"><i class="fa-solid fa-chevron-right"></i></span>
+        </div>
+      `).join('');
+    }
+
+    // RATINGS & FEEDBACKS
+    function setSelectRating(val) {
+      document.getElementById('selectedStarValue').value = val;
+      const stars = document.querySelectorAll('#starRatingSelector i');
+      stars.forEach((s, idx) => {
+        if (idx < val) s.className = 'fa-solid fa-star cursor-pointer';
+        else s.className = 'fa-regular fa-star cursor-pointer text-slate-300';
+      });
+    }
+
+    async function handleVisitorSubmitFeedback(e) {
+      e.preventDefault();
+      if (!selectedEventForBooking) return;
+
+      const rating = parseInt(document.getElementById('selectedStarValue').value, 10);
+      const comment = document.getElementById('visitorCommentInput').value.trim();
+
+      const newFeedback = {
+        id: Date.now(),
+        event_id: String(selectedEventForBooking.id),
+        event_title: selectedEventForBooking.title,
+        visitor: currentUser ? currentUser.username : 'visitor',
+        visitor_name: currentUser ? currentUser.full_name : 'Juan Dela Cruz',
+        rating: rating,
+        comment: comment,
+        staff_reply: null
+      };
+
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/feedbacks`, {
+          method: 'POST',
+          headers: supabaseHeaders,
+          body: JSON.stringify(newFeedback)
+        });
+      } catch (err) {}
+
+      feedbacksStore.unshift(newFeedback);
+      localStorage.setItem('tourlynk_feedbacks_store', JSON.stringify(feedbacksStore));
+
+      recordAuditLog(currentUser ? currentUser.username : 'visitor', 'SUBMIT_FEEDBACK', `Submitted ${rating}-star review for "${selectedEventForBooking.title}"`);
+      document.getElementById('visitorCommentInput').value = '';
+      showToast('Thank you! Feedback submitted.', 'success');
+      renderEventFeedbacks(selectedEventForBooking.id);
+      renderOrganizerFeedbacks();
+    }
+
+    function renderEventFeedbacks(eventId) {
+      const container = document.getElementById('eventFeedbacksList');
+      if (!container) return;
+
+      const items = feedbacksStore.filter(f => String(f.event_id) === String(eventId));
+
+      if (items.length === 0) {
+        container.innerHTML = `<p class="text-[10px] text-slate-400 italic">No reviews yet for this place.</p>`;
+        return;
+      }
+
+      container.innerHTML = items.map(f => `
+        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 space-y-1">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-slate-800 text-[10px]">${f.visitor_name} (@${f.visitor})</span>
+            <span class="text-amber-400 font-bold text-[9px]"><i class="fa-solid fa-star"></i> ${f.rating}.0</span>
+          </div>
+          <p class="text-slate-600 text-[10px] font-medium leading-tight">"${f.comment}"</p>
+          ${f.staff_reply ? `
+            <div class="bg-teal-50/80 border-l-2 border-teal-500 pl-2 py-1 mt-1 rounded-r-lg text-[9px]">
+              <span class="font-bold text-teal-800 block">Staff Response:</span>
+              <p class="text-slate-600 italic">"${f.staff_reply}"</p>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderOrganizerFeedbacks() {
+      const container = document.getElementById('organizerFeedbacksContainer');
+      if (!container) return;
+
+      if (feedbacksStore.length === 0) {
+        container.innerHTML = `<div class="text-center py-6 bg-white rounded-3xl border border-slate-200 text-xs text-slate-500 font-semibold">No visitor feedbacks to respond to.</div>`;
+        return;
+      }
+
+      container.innerHTML = feedbacksStore.map(f => `
+        <div class="bg-white p-4 rounded-3xl border border-slate-200/90 shadow-sm space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-extrabold text-brand-700 bg-brand-50 px-2.5 py-0.5 rounded-full border border-brand-100">${f.event_title}</span>
+            <span class="text-amber-500 font-bold text-[10px]"><i class="fa-solid fa-star"></i> ${f.rating}.0 Rating</span>
+          </div>
+          <div>
+            <p class="text-[11px] text-slate-700 font-bold">${f.visitor_name} (@${f.visitor}):</p>
+            <p class="text-xs text-slate-600 italic font-medium">"${f.comment}"</p>
+          </div>
+
+          ${f.staff_reply ? `
+            <div class="bg-teal-50 border-l-2 border-teal-500 p-2 rounded-r-xl text-[10px]">
+              <span class="font-bold text-teal-800 block">Your Staff Reply:</span>
+              <p class="text-slate-600 italic">"${f.staff_reply}"</p>
+            </div>
+          ` : `
+            <button onclick="playClickSound(); openReplyModal(${f.id});" class="w-full py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-xs transition active:scale-95 flex items-center justify-center gap-1 shadow-sm">
+              <i class="fa-solid fa-reply"></i> Reply to Inquiry
+            </button>
+          `}
+        </div>
+      `).join('');
+    }
+
+    function openReplyModal(feedbackId) {
+      selectedFeedbackForReply = feedbacksStore.find(f => f.id === feedbackId);
+      if (!selectedFeedbackForReply) return;
+
+      document.getElementById('replyTargetVisitor').innerText = `To: ${selectedFeedbackForReply.visitor_name} (@${selectedFeedbackForReply.visitor})`;
+      document.getElementById('replyTargetComment').innerText = `"${selectedFeedbackForReply.comment}"`;
+      document.getElementById('replyInquiryModal').classList.remove('hidden');
+    }
+
+    function closeReplyInquiryModal() { document.getElementById('replyInquiryModal').classList.add('hidden'); }
+
+    async function handleStaffSubmitReply(e) {
+      e.preventDefault();
+      if (!selectedFeedbackForReply) return;
+
+      const replyText = document.getElementById('staffReplyInput').value.trim();
+      selectedFeedbackForReply.staff_reply = replyText;
+
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/feedbacks?id=eq.${selectedFeedbackForReply.id}`, {
+          method: 'PATCH',
+          headers: supabaseHeaders,
+          body: JSON.stringify({ staff_reply: replyText })
+        });
+      } catch (err) {}
+
+      localStorage.setItem('tourlynk_feedbacks_store', JSON.stringify(feedbacksStore));
+      recordAuditLog(currentUser.username, 'STAFF_REPLY_INQUIRY', `Responded to feedback #${selectedFeedbackForReply.id} by @${selectedFeedbackForReply.visitor}`);
+
+      document.getElementById('staffReplyInput').value = '';
+      closeReplyInquiryModal();
+      showToast('Response sent to visitor!', 'success');
+      renderOrganizerFeedbacks();
+    }
+
     async function submitProposedPlace(e) {
       e.preventDefault();
 
-      const spotId = document.getElementById('propSpotId').value.trim();
-      const title = document.getElementById('propTitle').value.trim();
-      const category = document.getElementById('propCategory').value;
-      const location = document.getElementById('propLocation').value.trim();
-      const date = document.getElementById('propDate').value;
-      const customImg = document.getElementById('propImage').value.trim();
-      const slots = parseInt(document.getElementById('propSlots').value, 10);
-
       const isAdmin = currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin');
-      const defaultImg = 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80';
+      const initialStatus = isAdmin ? 'Approved' : 'Pending Admin Approval';
+      const customImg = document.getElementById('propImage').value.trim();
 
-      if (spotId) {
-        // EDIT EXISTING TOURISM SPOT
-        const idx = eventsList.findIndex(e => String(e.id) === String(spotId));
-        if (idx !== -1) {
-          eventsList[idx].title = title;
-          eventsList[idx].category = category;
-          eventsList[idx].location = location;
-          eventsList[idx].date = date;
-          eventsList[idx].image_url = customImg || defaultImg;
-          eventsList[idx].available_slots = slots;
-        }
+      const newPlaceId = String(Date.now());
+      const newPlace = {
+        id: newPlaceId,
+        title: document.getElementById('propTitle').value.trim(),
+        category: document.getElementById('propCategory').value,
+        location: document.getElementById('propLocation').value.trim(),
+        date: document.getElementById('propDate').value,
+        description: `Tourism destination created by ${currentUser ? currentUser.username : 'admin'}.`,
+        available_slots: parseInt(document.getElementById('propSlots').value, 10),
+        status: initialStatus,
+        badgeColor: 'bg-emerald-100 text-emerald-800',
+        image_url: customImg || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+        proposed_by: currentUser ? currentUser.username : 'admin'
+      };
 
-        const supabasePatchPayload = {
-          title: title,
-          category: category,
-          location: location,
-          date: date,
-          image_url: customImg || defaultImg,
-          available_slots: slots
-        };
-
-        try {
-          await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${spotId}`, {
-            method: 'PATCH',
-            headers: supabaseHeaders,
-            body: JSON.stringify(supabasePatchPayload)
-          });
-        } catch (err) {
-          console.error('Supabase Patch Error:', err);
-        }
-
-        recordAuditLog(currentUser ? currentUser.username : 'admin', 'EDIT_PLACE', `Updated tourism spot "${title}" (ID: ${spotId}).`);
-        showToast('Tourism Spot updated in Supabase!', 'success');
-      } else {
-        // CREATE NEW TOURISM SPOT
-        const initialStatus = isAdmin ? 'Approved' : 'Pending Admin Approval';
-        const newPlaceId = String(Date.now());
-        const newPlace = {
-          id: newPlaceId,
-          title: title,
-          category: category,
-          location: location,
-          date: date,
-          description: `Tourism destination created by ${currentUser ? currentUser.username : 'admin'}.`,
-          available_slots: slots,
-          status: initialStatus,
-          badgeColor: 'bg-emerald-100 text-emerald-800',
-          image_url: customImg || defaultImg,
-          proposed_by: currentUser ? currentUser.username : 'admin'
-        };
-
-        eventsList.unshift(newPlace);
-
-        const supabasePayload = {
-          id: newPlace.id,
-          title: newPlace.title,
-          category: newPlace.category,
-          location: newPlace.location,
-          date: newPlace.date,
-          description: newPlace.description,
-          available_slots: newPlace.available_slots,
-          status: newPlace.status,
-          badge_color: newPlace.badgeColor,
-          image_url: newPlace.image_url,
-          proposed_by: newPlace.proposed_by
-        };
-
-        try {
-          await fetch(`${SUPABASE_URL}/rest/v1/events`, {
-            method: 'POST',
-            headers: supabaseHeaders,
-            body: JSON.stringify(supabasePayload)
-          });
-        } catch (err) {
-          console.error('Supabase Post Error:', err);
-        }
-
-        recordAuditLog(currentUser ? currentUser.username : 'admin', 'CREATE_PLACE', `Created tourism place "${newPlace.title}" with status: ${initialStatus}.`);
-        showToast(isAdmin ? 'New Tourism Spot Added & Live!' : 'Proposal Submitted for Admin Review!', 'success');
-      }
-
+      eventsList.unshift(newPlace);
       saveEventsDB();
-      closeProposeModal();
-      renderEventsList(eventsList);
-      refreshWebAdminDashboard();
-    }
 
-    // CONFIRM DELETE TOURISM SPOT
-    function confirmDeleteSpot(spotId, spotTitle) {
-      deletingSpotId = spotId;
-      document.getElementById('deleteTargetTitle').innerText = spotTitle;
-      document.getElementById('deleteConfirmModal').classList.remove('hidden');
-    }
-
-    function closeDeleteModal() {
-      deletingSpotId = null;
-      document.getElementById('deleteConfirmModal').classList.add('hidden');
-    }
-
-    // EXECUTE DELETE SPOT FROM SUPABASE
-    async function executeDeleteSpot() {
-      if (!deletingSpotId) return;
-
-      const spotToDelete = eventsList.find(e => String(e.id) === String(deletingSpotId));
-      const spotTitle = spotToDelete ? spotToDelete.title : deletingSpotId;
+      const supabasePayload = {
+        id: newPlace.id,
+        title: newPlace.title,
+        category: newPlace.category,
+        location: newPlace.location,
+        date: newPlace.date,
+        description: newPlace.description,
+        available_slots: newPlace.available_slots,
+        status: newPlace.status,
+        badge_color: newPlace.badgeColor,
+        image_url: newPlace.image_url,
+        proposed_by: newPlace.proposed_by
+      };
 
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/events?id=eq.${deletingSpotId}`, {
-          method: 'DELETE',
-          headers: supabaseHeaders
+        await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+          method: 'POST',
+          headers: supabaseHeaders,
+          body: JSON.stringify(supabasePayload)
         });
-      } catch (err) {
-        console.error('Supabase Delete Error:', err);
-      }
+      } catch (err) {}
 
-      eventsList = eventsList.filter(e => String(e.id) !== String(deletingSpotId));
-      saveEventsDB();
+      recordAuditLog(currentUser ? currentUser.username : 'admin', 'CREATE_PLACE', `Created tourism place "${newPlace.title}" with status: ${initialStatus}.`);
 
-      recordAuditLog(currentUser ? currentUser.username : 'admin', 'DELETE_PLACE', `Deleted tourism spot "${spotTitle}" (ID: ${deletingSpotId}).`);
-
-      closeDeleteModal();
-      showToast('Tourism Spot deleted from Supabase!', 'success');
+      closeProposeModal();
+      showToast(isAdmin ? 'New Tourism Spot Added & Live!' : 'Proposal Submitted for Admin Review!', 'success');
       renderEventsList(eventsList);
       refreshWebAdminDashboard();
     }
@@ -1323,20 +1499,17 @@
       }
     }
 
-    // ROLE-BASED DASHBOARD ROUTER
     function proceedToDashboard() {
       if (!currentUser) return;
 
       const isWebAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
 
       if (isWebAdmin) {
-        // Hide Mobile Shell, Expand Body, Render Desktop Admin Dashboard
         document.getElementById('mobileAppShell').classList.add('hidden');
         document.getElementById('webAdminDashboard').classList.remove('hidden');
         document.getElementById('webAdminName').innerText = currentUser.full_name;
         refreshWebAdminDashboard();
       } else {
-        // Show Mobile Shell, Render Tourist/Staff Dashboard
         document.getElementById('webAdminDashboard').classList.add('hidden');
         document.getElementById('mobileAppShell').classList.remove('hidden');
         document.getElementById('authModule').classList.add('hidden');
@@ -1363,11 +1536,13 @@
         document.getElementById('welcomeSubtitleText').innerText = 'Select an event below to check remaining tickets & apply';
         document.getElementById('nav-tabBookings').classList.remove('hidden');
         renderVisitorBookingsTab();
+        renderUserSavedSpots();
         switchMobileTab('tabEvents');
       } else if (currentUser.role === 'organizer') {
         document.getElementById('welcomeSubtitleText').innerText = 'Approve visitor tickets directly & propose places to Admin';
         document.getElementById('nav-tabOrganizerReview').classList.remove('hidden');
         renderOrganizerApplications();
+        renderOrganizerFeedbacks();
         switchMobileTab('tabEvents');
       }
     }
@@ -1393,7 +1568,6 @@
       }
     }
 
-    // WEB ADMIN DASHBOARD FUNCTIONS
     function switchAdminSection(secId) {
       document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
       document.querySelectorAll('.admin-nav-item').forEach(item => {
@@ -1422,18 +1596,16 @@
       const activeSpots = eventsList.filter(e => !e.status || e.status === 'Approved');
       const pendingSpots = eventsList.filter(e => e.status === 'Pending Admin Approval');
 
-      // Update Stats
       document.getElementById('statTotalSpots').innerText = activeSpots.length;
       document.getElementById('statPendingProposals').innerText = pendingSpots.length;
       document.getElementById('statTotalApps').innerText = sharedApplicationsStore.length;
       document.getElementById('statTotalLogs').innerText = loadedAuditLogs.length;
       document.getElementById('badgePendingCount').innerText = pendingSpots.length;
 
-      // Render Active Spots Table with Actions (Edit & Delete)
       const spotsTableBody = document.getElementById('webAdminSpotsTable');
       if (spotsTableBody) {
         if (activeSpots.length === 0) {
-          spotsTableBody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-500">No active tourism spots in database.</td></tr>`;
+          spotsTableBody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500">No active tourism spots in database.</td></tr>`;
         } else {
           spotsTableBody.innerHTML = activeSpots.map(s => `
             <tr class="hover:bg-slate-800/40 transition">
@@ -1444,23 +1616,12 @@
               <td class="py-3 px-4"><span class="bg-teal-500/10 text-teal-300 border border-teal-500/20 px-2 py-0.5 rounded-full text-[10px] font-bold">${s.category || 'General'}</span></td>
               <td class="py-3 px-4 text-slate-400">${s.location}</td>
               <td class="py-3 px-4 font-mono font-bold text-amber-400">${s.available_slots} Slots</td>
-              <td class="py-3 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold">${s.status || 'Approved'}</span></td>
-              <td class="py-3 px-4 text-center">
-                <div class="flex items-center justify-center gap-2">
-                  <button onclick="playClickSound(); openEditSpotModal('${s.id}')" class="px-2.5 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500 hover:text-white transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Edit Spot">
-                    <i class="fa-solid fa-pen-to-square"></i> Edit
-                  </button>
-                  <button onclick="playClickSound(); confirmDeleteSpot('${s.id}', '${(s.title || '').replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white transition text-[11px] font-bold flex items-center gap-1 shadow-sm" title="Delete Spot">
-                    <i class="fa-solid fa-trash"></i> Delete
-                  </button>
-                </div>
-              </td>
+              <td class="py-3 px-4"><span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold">Approved</span></td>
             </tr>
           `).join('');
         }
       }
 
-      // Render Proposed Places Grid
       const proposedGrid = document.getElementById('webAdminProposedGrid');
       if (proposedGrid) {
         if (pendingSpots.length === 0) {
@@ -1492,7 +1653,6 @@
         }
       }
 
-      // Render Admin Logs Table
       renderAuditLogs(loadedAuditLogs);
     }
 
@@ -1534,10 +1694,14 @@
       document.getElementById('modalEventDescription').innerText = selectedEventForBooking.description;
       document.getElementById('modalEventSlotsBadge').innerText = `Available: ${selectedEventForBooking.available_slots} Tickets`;
 
+      updateBookmarkIconState(selectedEventForBooking.id);
+      renderEventFeedbacks(selectedEventForBooking.id);
+
       const isVisitor = currentUser && currentUser.role === 'visitor';
       const isOrganizer = currentUser && currentUser.role === 'organizer';
 
       document.getElementById('modalVisitorActionForm').classList.toggle('hidden', !isVisitor);
+      document.getElementById('visitorFeedbackForm').classList.toggle('hidden', !isVisitor);
       document.getElementById('modalOrganizerStockForm').classList.toggle('hidden', !isOrganizer);
 
       document.getElementById('eventDetailModal').classList.remove('hidden');
@@ -1598,8 +1762,8 @@
 
       if (myApps.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-10 bg-white rounded-3xl border border-slate-200/90 shadow-sm">
-            <i class="fa-solid fa-ticket text-4xl text-slate-300 mb-2"></i>
+          <div class="text-center py-6 bg-white rounded-3xl border border-slate-200/90 shadow-sm">
+            <i class="fa-solid fa-ticket text-3xl text-slate-300 mb-1"></i>
             <p class="text-xs font-semibold text-slate-500">No ticket applications submitted.</p>
           </div>`;
         return;
@@ -1632,7 +1796,7 @@
       if (!container) return;
 
       if (sharedApplicationsStore.length === 0) {
-        container.innerHTML = `<div class="text-center py-10 bg-white rounded-3xl border border-slate-200 text-xs text-slate-500 font-semibold">No visitor applications to review.</div>`;
+        container.innerHTML = `<div class="text-center py-6 bg-white rounded-3xl border border-slate-200 text-xs text-slate-500 font-semibold">No visitor applications to review.</div>`;
         return;
       }
 
@@ -1736,7 +1900,6 @@
         } catch (err) {}
 
         recordAuditLog(currentUser.username, `PROPOSAL_${newStatus.toUpperCase()}`, `Admin ${newStatus.toLowerCase()} proposed tourism place "${place.title}"`);
-
         showToast(`Tourism Place "${place.title}" has been ${newStatus}!`, newStatus === 'Approved' ? 'success' : 'error');
         renderEventsList(eventsList);
         refreshWebAdminDashboard();
@@ -1784,7 +1947,7 @@
         } else {
           webLogsTable.innerHTML = logs.map(l => {
             let badgeColor = 'bg-sky-500/10 text-sky-400 border-sky-500/20';
-            if (l.action.includes('DECLINED') || l.action.includes('REJECTED') || l.action.includes('LOCKOUT') || l.action === 'FAILED_LOGIN' || l.action.includes('DELETE')) badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+            if (l.action.includes('DECLINED') || l.action.includes('REJECTED') || l.action.includes('LOCKOUT') || l.action === 'FAILED_LOGIN') badgeColor = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
             if (l.action.includes('APPROVED') || l.action === 'LOGIN_SUCCESS') badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
 
             return `
@@ -1806,15 +1969,10 @@
     function executeLogoutAction() {
       closeLogoutModal();
       currentUser = null;
-      
-      // Hide Desktop Web Admin
       document.getElementById('webAdminDashboard').classList.add('hidden');
-
-      // Show Mobile Shell Auth
       document.getElementById('mobileAppShell').classList.remove('hidden');
       document.getElementById('mainAppModule').classList.add('hidden');
       document.getElementById('authModule').classList.remove('hidden');
-      
       document.getElementById('loginForm').reset();
       document.getElementById('registerForm').reset();
       showToast('You have been logged out.', 'success');
